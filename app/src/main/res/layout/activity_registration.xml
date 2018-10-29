@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="passwordkeeperclient.spart.ru.password_keeper_client.RegistrationActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:text="@string/registrationText"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/emailText"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            tools:ignore="TextFields"/>
+
+        <EditText
+            android:id="@+id/loginText"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/emailText"
+            android:layout_centerHorizontal="true"
+            android:hint="@string/enterLogin"
+            android:maxLength="15"
+            tools:ignore="TextFields" />
+
+        <EditText
+            android:id="@+id/passwordText"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/loginText"
+            android:layout_centerHorizontal="true"
+            android:hint="@string/enterPassword"
+            android:maxLength="15"
+            android:inputType="textPassword"
+            tools:ignore="TextFields"/>
+
+        <EditText
+            android:id="@+id/confirmPasswordText"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/passwordText"
+            android:layout_centerHorizontal="true"
+            android:hint="@string/confirmPassword"
+            android:maxLength="15"
+            android:inputType="textPassword"
+            tools:ignore="TextFields"/>
+
+
+
+        <Button
+            android:id="@+id/registrationBtn"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/confirmPasswordText"
+            android:layout_centerHorizontal="true"
+            android:onClick="saveRegistration"
+            android:text="@string/registration"/>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
