@@ -9,12 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 public class EnterActivity extends AppCompatActivity {
     private EditText login;
     private EditText password;
     private Button enterBtn;
     private Button registrationBtn;
+    private ProgressBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,19 +26,29 @@ public class EnterActivity extends AppCompatActivity {
         password = findViewById(R.id.passwordText);
         enterBtn =findViewById(R.id.enterBtn);
         registrationBtn =findViewById(R.id.registrationBtn);
+        bar = findViewById(R.id.progressBarRound);
         Toolbar toolbar = findViewById(R.id.enterToolbar);
         setSupportActionBar(toolbar);
 
     }
-    int i=0;
+
 
     public void showMainActivity (View view){
+//        EnterAsynkTask asynkTask = new EnterAsynkTask(bar);
+//        asynkTask.execute();
         Intent intObj = new Intent(this, MainActivity.class);
         startActivity(intObj);
+//        asynkTask.setProcessEnded(true);
+
     }
 
     public void showRegistrationActivity (View view){
         Intent intObj = new Intent(this, RegistrationActivity.class);
+        startActivity(intObj);
+    }
+
+    public void showSettingsActivity (View view){
+        Intent intObj = new Intent(this, SettingsActivity.class);
         startActivity(intObj);
     }
 
@@ -56,8 +68,7 @@ public class EnterActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intObj = new Intent(this, SettingsActivity.class);
-            startActivity(intObj);
+            showSettingsActivity(this.getCurrentFocus());
             return true;
         }
 

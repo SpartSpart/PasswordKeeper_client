@@ -11,6 +11,9 @@ import android.widget.GridView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import passwordkeeperclient.spart.ru.password_keeper_client.gridView.GridViewAdapter;
+import passwordkeeperclient.spart.ru.password_keeper_client.gridView.GridViewModel;
+
 public class MainActivity extends AppCompatActivity {
     private GridView mainGrid;
 
@@ -25,9 +28,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testPushGrid(){
-        ArrayList<String> data=new ArrayList<String>(Arrays.asList("one","two","three","four","five","six","seven","eight","nine","ten"));
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
-        mainGrid.setAdapter(adapter);
+//        ArrayList<String> data=new ArrayList<String>(Arrays.asList("one","two","three","four","five","six","seven","eight","nine","ten"));
+//        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+
+        ArrayList<GridViewModel> gridViewModels = new ArrayList<>();
+        for (int i=0;i<10;i++){
+            String s = String.valueOf(i);
+            gridViewModels.add(new GridViewModel(s,s,s));
+        }
+
+        GridViewAdapter adapter1 = new GridViewAdapter(getApplicationContext(),android.R.layout.simple_list_item_1, gridViewModels);
+        mainGrid.setAdapter(adapter1);
 
     }
 
