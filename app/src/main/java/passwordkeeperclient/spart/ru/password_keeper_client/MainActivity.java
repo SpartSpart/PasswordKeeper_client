@@ -5,17 +5,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import passwordkeeperclient.spart.ru.password_keeper_client.gridView.GridViewAdapter;
-import passwordkeeperclient.spart.ru.password_keeper_client.gridView.GridViewModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.gridView.ListViewAdapter;
+import passwordkeeperclient.spart.ru.password_keeper_client.gridView.ListViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    private GridView mainGrid;
+    private ListView mainView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,23 +21,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
-        mainGrid = findViewById(R.id.mainGrid);
+        mainView = findViewById(R.id.secretList);
         testPushGrid();
     }
 
     public void testPushGrid(){
-//        ArrayList<String> data=new ArrayList<String>(Arrays.asList("one","two","three","four","five","six","seven","eight","nine","ten"));
-//        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+        ArrayList<ListViewModel> listViewModels = new ArrayList<>();
 
-        ArrayList<GridViewModel> gridViewModels = new ArrayList<>();
-        for (int i=0;i<10;i++){
+        for (int i=0;i<100;i++){
             String s = String.valueOf(i);
-            gridViewModels.add(new GridViewModel(s,s,s));
+            listViewModels.add(new ListViewModel(s,s,s,i));
         }
 
-        GridViewAdapter adapter1 = new GridViewAdapter(getApplicationContext(),android.R.layout.simple_list_item_1, gridViewModels);
-        mainGrid.setAdapter(adapter1);
-
+        ListViewAdapter adapter = new ListViewAdapter(getApplicationContext(),0, listViewModels);
+        mainView.setAdapter(adapter);
     }
 
     @Override
