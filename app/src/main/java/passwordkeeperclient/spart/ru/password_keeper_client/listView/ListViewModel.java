@@ -1,17 +1,22 @@
-package passwordkeeperclient.spart.ru.password_keeper_client.gridView;
+package passwordkeeperclient.spart.ru.password_keeper_client.listView;
 
 public class ListViewModel {
+    private long id;
     private String description;
     private String login;
     private String password;
-    private long userID;
 
 
-    public ListViewModel(String description, String login, String password, long userID) {
+    public ListViewModel(long id, String description, String login, String password) {
+        this.id = id;
         this.description = description;
         this.login = login;
         this.password = password;
     }
+
+    public long getId() {return id;}
+
+    public void setId(long id) {this.id = id;}
 
     public String getDescription() {
         return description;
@@ -37,12 +42,5 @@ public class ListViewModel {
         this.password = password;
     }
 
-    public long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(long userID) {
-        this.userID = userID;
-    }
 
 }

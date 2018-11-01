@@ -6,35 +6,52 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-import passwordkeeperclient.spart.ru.password_keeper_client.gridView.ListViewAdapter;
-import passwordkeeperclient.spart.ru.password_keeper_client.gridView.ListViewModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.listView.ListViewAdapter;
+import passwordkeeperclient.spart.ru.password_keeper_client.listView.ListViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mainView;
+    static ArrayList<ListViewModel> listViewModels = new ArrayList<>();
+    public static Set<Long> changedID = new HashSet<>(); //For saving id of objects that were changed in the listView for further changing in DB
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        changedID.clear();
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
+
         mainView = findViewById(R.id.secretList);
-        testPushGrid();
+
+        buildListModel();
     }
 
-    public void testPushGrid(){
-        ArrayList<ListViewModel> listViewModels = new ArrayList<>();
+    public void buildListModel() {
 
-        for (int i=0;i<100;i++){
-            String s = String.valueOf(i);
-            listViewModels.add(new ListViewModel(s,s,s,i));
+        if (listViewModels.isEmpty()) {
+
+            for (int i = 0; i < 10; i++) {
+                String s = String.valueOf(i * 10);
+                listViewModels.add(new ListViewModel(i,s, s, s));
+            }
+            Toast.makeText(this, "First start",
+                    Toast.LENGTH_LONG).show();
         }
 
-        ListViewAdapter adapter = new ListViewAdapter(getApplicationContext(),0, listViewModels);
+        ListViewAdapter adapter = new ListViewAdapter(getApplicationContext(), 0, listViewModels);
         mainView.setAdapter(adapter);
+
     }
 
     @Override
@@ -53,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
+            Toast.makeText(this, changedID.toString(), Toast.LENGTH_LONG).show();
             return true;
         }
 

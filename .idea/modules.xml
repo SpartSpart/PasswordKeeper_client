@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/Password-Keeper-client.iml" filepath="$PROJECT_DIR$/.idea/Password-Keeper-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/PasswordKeeper_client.iml" filepath="$PROJECT_DIR$/PasswordKeeper_client.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
