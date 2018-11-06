@@ -1,22 +1,13 @@
 package passwordkeeperclient.spart.ru.password_keeper_client;
 
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-//import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-//import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-
-import passwordkeeperclient.spart.ru.password_keeper_client.server.ApiService;
-import passwordkeeperclient.spart.ru.password_keeper_client.server.ApiUtils;
-import passwordkeeperclient.spart.ru.password_keeper_client.server.UserModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.model.UserModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,28 +29,29 @@ public class RegistrationActivity extends AppCompatActivity {
         confirmPassword = findViewById(R.id.confirmPasswordText);
         email = findViewById(R.id.emailText);
         registrationBtn = findViewById(R.id.registrationBtn);
-        apiService = ApiUtils.getApiService();
+        apiService = ApiConnection.getApiService();
+
+        registrationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    addUser("testAndroidUser", "testAndroidPassword", "testAndroidEmail"); //Values from textEdit forms
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 
 
-    public void saveRegistration(View view) {
-        //retrofit magic
-        try {
-            addUser("ads", "asd", "asd"); //Values from textEdit forms
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void addUser(final String login, String password, String email) throws Exception {
+    public void addUser(String login, String password, String email) throws Exception {
         apiService.addUser(login, password, email).enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
 
                 if (response.isSuccessful()) {
-
+                    System.out.println(response.body().toString());
                 }
             }
 
