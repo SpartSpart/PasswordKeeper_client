@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         buildListModel(secretModels);
 
-       // Intent.ACTION_GET_CONTENT("SECRET_MODELS");
     }
 
     public void buildListModel(ArrayList<SecretModel> secretModels) {
@@ -62,15 +61,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-//        if (listViewModels.isEmpty()) {
-//
-//            for (int i = 0; i < 10; i++) {
-//                String s = String.valueOf(i * 10);
-//                listViewModels.add(new ListViewModel(i,s, s, s));
-//            }
-//            Toast.makeText(this, "First start",
-//                    Toast.LENGTH_LONG).show();
-//        }
 
         ListViewAdapter adapter = new ListViewAdapter(getApplicationContext(), 0, listViewModels);
         mainView.setAdapter(adapter);
@@ -113,10 +103,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return null;
-//        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-//        intent.putExtra("SECRET_MODELS", new ArrayList<>(secretModels));
-//        intent.putExtra("AUTHORIZATION", authorization);
-//
-//        startActivity(intent);
+
     }
 }

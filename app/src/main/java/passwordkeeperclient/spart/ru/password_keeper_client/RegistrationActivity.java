@@ -10,12 +10,8 @@ import android.widget.Toast;
 import java.util.concurrent.ExecutionException;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.UserApiConnection;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.model.UserModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.AddUser;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RegistrationActivity extends AppCompatActivity {
     private EditText loginTxt;
@@ -34,7 +30,7 @@ public class RegistrationActivity extends AppCompatActivity {
         confirmPasswordTxt = findViewById(R.id.confirmPasswordText);
         emailTxt = findViewById(R.id.emailText);
         registrationBtn = findViewById(R.id.registrationBtn);
-        apiService = UserApiConnection.getApiService();
+        apiService = ApiConnection.getApiService();
 
         registrationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,32 +66,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-
-//    public void addUser(final String login, String password, String email) throws Exception {
-//
-//            apiService.addUser(new UserModel(login,password,email)).enqueue(new Callback<Void>() {
-//
-//
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//                loginTxt.setText("response = " +response.toString());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {
-//                loginTxt.setText("call = " + call.toString());
-//            }
-//        });
-
-//    }
-////
-//    public void showResponse(String response) {
-////        if(loginTxt.getVisibility() == View.GONE) {
-////            mResponseTv.setVisibility(View.VISIBLE);
-////        }
-//
-//        loginTxt.setText(response);
-//    }
 
     boolean checkPasswords (String password, String confirmPassword){
         if(password.equals(confirmPassword))

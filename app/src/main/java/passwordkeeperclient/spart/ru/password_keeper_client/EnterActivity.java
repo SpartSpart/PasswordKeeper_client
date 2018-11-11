@@ -1,13 +1,9 @@
 package passwordkeeperclient.spart.ru.password_keeper_client;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,22 +12,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.UserApiConnection;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
-import passwordkeeperclient.spart.ru.password_keeper_client.resonses.GetSecrets;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.LogIn;
-import retrofit2.Call;
-import retrofit2.Response;
-
-import static java.util.Objects.nonNull;
 
 public class EnterActivity extends AppCompatActivity {
     private EditText login;
@@ -53,7 +38,7 @@ public class EnterActivity extends AppCompatActivity {
         bar = findViewById(R.id.progressBarRound);
         Toolbar toolbar = findViewById(R.id.enterToolbar);
         setSupportActionBar(toolbar);
-        apiService = UserApiConnection.getApiService();
+        apiService = ApiConnection.getApiService();
 
 
     }
@@ -80,18 +65,6 @@ public class EnterActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
             }
         }
-
-
-//        authorization = login.getText() + ":" + password.getText();  //get secrets
-//        authorization = "Jerry:0000";
-//        GetSecrets getSecrets = new GetSecrets(authorization);
-//
-//        Collection<SecretModel> secretModels = getSecrets.execute().get();
-//        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-//        intent.putExtra("SECRET_MODELS", new ArrayList<>(secretModels));
-//        intent.putExtra("AUTHORIZATION", authorization);
-//
-//        startActivity(intent);
     }
 
     public void showRegistrationActivity(View view) {
@@ -103,8 +76,6 @@ public class EnterActivity extends AppCompatActivity {
 
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -114,9 +85,6 @@ public class EnterActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

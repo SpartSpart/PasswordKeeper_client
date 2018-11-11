@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.UserApiConnection;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -22,7 +22,7 @@ public class GetSecrets extends AsyncTask<Void, Void, Collection<SecretModel>> {
     @Override
     protected Collection<SecretModel> doInBackground(Void... voids) {
 
-        ApiService apiService = UserApiConnection.getApiService();
+        ApiService apiService = ApiConnection.getApiService();
 
         String authHeader = "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP);
         Call<Collection<SecretModel>> call = apiService.getSecrests(authHeader);
@@ -36,8 +36,5 @@ public class GetSecrets extends AsyncTask<Void, Void, Collection<SecretModel>> {
         }
 
         return null;
-
     }
-
-
 }

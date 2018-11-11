@@ -7,7 +7,7 @@ import android.util.Base64;
 import java.io.IOException;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.UserApiConnection;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -21,7 +21,7 @@ private String authorization;
 
     @Override
     protected String doInBackground(Void... voids) {
-        ApiService apiService = UserApiConnection.getApiService();
+        ApiService apiService = ApiConnection.getApiService();
 
         String authHeader = "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP);
         Call<Void> call = apiService.loginUser(authHeader);
@@ -47,6 +47,5 @@ private String authorization;
         }
 
         return null;
-
     }
 }

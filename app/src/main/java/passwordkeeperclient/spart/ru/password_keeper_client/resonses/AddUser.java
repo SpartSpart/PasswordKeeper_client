@@ -5,9 +5,8 @@ import android.os.AsyncTask;
 import java.io.IOException;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.UserApiConnection;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.UserModel;
-import retrofit2.Callback;
 
 /**
  * Created by Pamela on 11.11.2018.
@@ -26,7 +25,7 @@ public class AddUser extends AsyncTask <Void,Void,Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        ApiService apiService = UserApiConnection.getApiService();
+        ApiService apiService = ApiConnection.getApiService();
 
         try {
             apiService.addUser(new UserModel(login, password, email)).execute();

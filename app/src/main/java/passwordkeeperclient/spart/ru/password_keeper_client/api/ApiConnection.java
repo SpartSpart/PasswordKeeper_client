@@ -1,8 +1,8 @@
 package passwordkeeperclient.spart.ru.password_keeper_client.api;
 
-public class UserApiConnection {
+public class ApiConnection {
 
-        private UserApiConnection() {}
+        private ApiConnection() {}
 
         public static final String BASE_URL = "http://192.168.1.141:8080/api/";
 
