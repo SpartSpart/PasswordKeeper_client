@@ -1,5 +1,6 @@
 package passwordkeeperclient.spart.ru.password_keeper_client;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,15 +10,19 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
-import passwordkeeperclient.spart.ru.password_keeper_client.listView.ListViewAdapter;
-import passwordkeeperclient.spart.ru.password_keeper_client.listView.ListViewModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.listview.ListViewAdapter;
+import passwordkeeperclient.spart.ru.password_keeper_client.listview.model.ListViewModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.resonses.GetSecrets;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mainView;
-    static ArrayList<ListViewModel> listViewModels = new ArrayList<>();
+    private ArrayList<ListViewModel> listViewModels;
     public static Set<Long> changedID = new HashSet<>(); //For saving id of objects that were changed in the listView for further changing in DB
 
 
@@ -25,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        listViewModels= new ArrayList<>();
         changedID.clear();
         setContentView(R.layout.activity_main);
 
@@ -34,20 +39,38 @@ public class MainActivity extends AppCompatActivity {
 
         mainView = findViewById(R.id.secretList);
 
-        buildListModel();
+        String authorization = getIntent().getStringExtra("Authorization");
+
+        ArrayList<SecretModel> secretModels = new ArrayList<>(getSecrets(authorization));
+
+        buildListModel(secretModels);
+
+       // Intent.ACTION_GET_CONTENT("SECRET_MODELS");
     }
 
-    public void buildListModel() {
+    public void buildListModel(ArrayList<SecretModel> secretModels) {
 
-        if (listViewModels.isEmpty()) {
-
-            for (int i = 0; i < 10; i++) {
-                String s = String.valueOf(i * 10);
-                listViewModels.add(new ListViewModel(i,s, s, s));
+        if (!secretModels.isEmpty()){
+            for(SecretModel secret: secretModels){
+                ListViewModel model= new ListViewModel(
+                        secret.getId(),
+                        secret.getDescription(),
+                        secret.getLogin(),
+                        secret.getPassword()
+                );
+                listViewModels.add(model);
             }
-            Toast.makeText(this, "First start",
-                    Toast.LENGTH_LONG).show();
+
         }
+//        if (listViewModels.isEmpty()) {
+//
+//            for (int i = 0; i < 10; i++) {
+//                String s = String.valueOf(i * 10);
+//                listViewModels.add(new ListViewModel(i,s, s, s));
+//            }
+//            Toast.makeText(this, "First start",
+//                    Toast.LENGTH_LONG).show();
+//        }
 
         ListViewAdapter adapter = new ListViewAdapter(getApplicationContext(), 0, listViewModels);
         mainView.setAdapter(adapter);
@@ -75,5 +98,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public Collection<SecretModel> getSecrets(String authorization){
+        GetSecrets getSecrets = new GetSecrets(authorization);
+
+        try {
+            return getSecrets.execute().get();
+
+        } catch (InterruptedException e) {
+            Toast.makeText(this, "Error:"+e.toString(), Toast.LENGTH_LONG).show();
+        } catch (ExecutionException e) {
+            Toast.makeText(this, "Error:"+e.toString(), Toast.LENGTH_LONG).show();
+        }
+
+        return null;
+//        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+//        intent.putExtra("SECRET_MODELS", new ArrayList<>(secretModels));
+//        intent.putExtra("AUTHORIZATION", authorization);
+//
+//        startActivity(intent);
     }
 }

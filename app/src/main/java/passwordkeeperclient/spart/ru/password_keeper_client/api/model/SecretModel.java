@@ -3,7 +3,9 @@ package passwordkeeperclient.spart.ru.password_keeper_client.api.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SecretModel {
+import java.io.Serializable;
+
+public class SecretModel implements Serializable {
 
     @SerializedName("id")
     @Expose

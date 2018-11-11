@@ -1,11 +1,9 @@
-package passwordkeeperclient.spart.ru.password_keeper_client.listView;
+package passwordkeeperclient.spart.ru.password_keeper_client.listview;
 
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -14,9 +12,9 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
+import passwordkeeperclient.spart.ru.password_keeper_client.listview.model.ListViewModel;
+
 import android.view.LayoutInflater;
-import android.widget.ListView;
-import android.widget.Toast;
 
 
 public class ListViewAdapter extends ArrayAdapter<ListViewModel>{

@@ -7,13 +7,13 @@ public class UserModel {
 
     @SerializedName("login")
     @Expose
-    private String login;
+    public String login;
     @SerializedName("password")
     @Expose
-    private String password;
+    public String password;
     @SerializedName("email")
     @Expose
-    private String email;
+    public String email;
 
     public UserModel(String login, String password, String email) {
         this.login = login;

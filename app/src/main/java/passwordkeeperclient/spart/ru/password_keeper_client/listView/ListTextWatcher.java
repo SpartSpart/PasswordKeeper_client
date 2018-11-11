@@ -1,10 +1,10 @@
-package passwordkeeperclient.spart.ru.password_keeper_client.listView;
+package passwordkeeperclient.spart.ru.password_keeper_client.listview;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.MainActivity;
+import passwordkeeperclient.spart.ru.password_keeper_client.listview.model.ListViewModel;
 
 public class ListTextWatcher implements TextWatcher {
 

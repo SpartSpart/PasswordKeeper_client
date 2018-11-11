@@ -1,10 +1,10 @@
 package passwordkeeperclient.spart.ru.password_keeper_client.api;
 
-public class ApiConnection {
+public class UserApiConnection {
 
-        private ApiConnection() {}
+        private UserApiConnection() {}
 
-        public static final String BASE_URL = "http://127.0.0.1:8080/api/user/";
+        public static final String BASE_URL = "http://192.168.1.141:8080/api/";
 
         public static ApiService getApiService() {
 

@@ -1,4 +1,4 @@
-package passwordkeeperclient.spart.ru.password_keeper_client.listView;
+package passwordkeeperclient.spart.ru.password_keeper_client.listview.model;
 
 public class ListViewModel {
     private long id;
