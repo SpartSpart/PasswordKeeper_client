@@ -1,5 +1,7 @@
 package passwordkeeperclient.spart.ru.password_keeper_client.api;
 
+import android.net.wifi.hotspot2.pps.Credential;
+
 import java.io.IOException;
 
 import okhttp3.Credentials;
@@ -11,7 +13,7 @@ public class Authorization implements Interceptor {
 
         private String credentials;
 
-        public Authorization (String user, String password) {
+        public Authorization(String user, String password) {
             this.credentials = Credentials.basic(user, password);
         }
 

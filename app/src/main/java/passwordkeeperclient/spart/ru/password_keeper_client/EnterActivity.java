@@ -73,7 +73,8 @@ public class EnterActivity extends AppCompatActivity {
     }
 
     public void showSettingsActivity(View view) {
-
+        Intent intObj = new Intent(this, SettingsActivity.class);
+        startActivity(intObj);
     }
 
     @Override

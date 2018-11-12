@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:\Share\AndroidProjects\PasswordKeeper_client\.idea\Password-Keeper-client.iml" filepath="D:\Share\AndroidProjects\PasswordKeeper_client\.idea\Password-Keeper-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/PasswordKeeper_client.iml" filepath="$PROJECT_DIR$/PasswordKeeper_client.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
