@@ -28,27 +28,20 @@
 
            android:layout_height="wrap_content"
            android:layout_below="@+id/mainToolbar"
-           android:layout_width="wrap_content">
-          <!-- //android:stretchColumns="**"-->
+           android:layout_width="match_parent"
+           android:stretchColumns="*">
 
            <TableRow>
                <TextView
                    android:text="Description"
-                   android:gravity="center_horizontal"
-                   android:layout_width="33pt"
-
-                   />
+                   android:gravity="center_horizontal"/>
 
                <TextView
                    android:text="Login"
-                   android:gravity="center_horizontal"
-                   android:layout_width="33pt"
-                   />
+                   android:gravity="center_horizontal"/>
                <TextView
                    android:text="Password"
-                   android:gravity="center_horizontal"
-                   android:layout_width="33pt"
-                   />
+                   android:gravity="center_horizontal"/>
            </TableRow>
 
        </TableLayout>

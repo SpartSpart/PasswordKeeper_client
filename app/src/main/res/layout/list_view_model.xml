@@ -11,29 +11,35 @@
         android:id="@+id/listViewModel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="*"
+
         tools:ignore="UselessParent">
         <TableRow tools:ignore="UselessParent">
             <EditText
                 android:id="@+id/description"
                 android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:background="@drawable/edit_text_style"
                 android:inputType="text"
                 android:textColor="@color/colorPrimaryDark"
+                android:layout_weight="1"
                 tools:ignore="LabelFor" />
             <EditText
                 android:id="@+id/login"
                 android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:background="@drawable/edit_text_style"
                 android:inputType="text"
                 android:textColor="@color/colorPrimaryDark"
+                android:layout_weight="1"
                 tools:ignore="LabelFor" />
             <EditText
                 android:id="@+id/password"
                 android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:background="@drawable/edit_text_style"
                 android:inputType="text"
                 android:textColor="@color/colorPrimaryDark"
+                android:layout_weight="1"
                 tools:ignore="LabelFor,TextFields" />
         </TableRow>
 

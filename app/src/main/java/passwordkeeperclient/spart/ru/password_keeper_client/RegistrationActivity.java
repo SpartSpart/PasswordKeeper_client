@@ -50,7 +50,10 @@ public class RegistrationActivity extends AppCompatActivity {
                         try {
                             if (addUser.execute().get()) {
                                 Toast.makeText(getApplicationContext(), "Successfull registration ", Toast.LENGTH_LONG).show();
+                                finish();
                             }
+                            else
+                                Toast.makeText(getApplicationContext(), "User or e-mail is already exist", Toast.LENGTH_LONG).show();
                         } catch (InterruptedException e) {
                             Toast.makeText(getApplicationContext(), "Error:" + e.toString(), Toast.LENGTH_LONG).show();
                         } catch (ExecutionException e) {

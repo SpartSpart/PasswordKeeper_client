@@ -8,5 +8,12 @@
         android:title="@string/action_save"
         android:icon="@drawable/ic_save_48dp"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_new"
+        android:orderInCategory="100"
+        android:title="New"
+        android:icon="@drawable/ic_new_48dp"
+        app:showAsAction="always"/>
 
 </menu>
+

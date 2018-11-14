@@ -23,6 +23,19 @@ public class SecretModel implements Serializable {
     @Expose
     private String password;
 
+    public SecretModel(long id, String description, String login, String password) {
+        this.id = id;
+        this.description = description;
+        this.login = login;
+        this.password = password;
+    }
+
+    public SecretModel(String description, String login, String password) {
+        this.description = description;
+        this.login = login;
+        this.password = password;
+    }
+
     public String getDescription() {return description;}
 
     public void setDescription(String description) {

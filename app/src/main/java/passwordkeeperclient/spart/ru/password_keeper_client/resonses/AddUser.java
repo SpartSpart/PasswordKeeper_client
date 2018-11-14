@@ -7,6 +7,8 @@ import java.io.IOException;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.UserModel;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by Pamela on 11.11.2018.
@@ -26,10 +28,11 @@ public class AddUser extends AsyncTask <Void,Void,Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         ApiService apiService = ApiConnection.getApiService();
-
+        Call<Void> call = apiService.addUser(new UserModel(login, password, email));
         try {
-            apiService.addUser(new UserModel(login, password, email)).execute();
-            return true;
+            Response<Void> response = call.execute();
+            if (response.isSuccessful())
+                 return true;
 
         } catch (IOException e) {
             e.printStackTrace();

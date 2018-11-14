@@ -17,17 +17,12 @@ import passwordkeeperclient.spart.ru.password_keeper_client.listview.model.ListV
 import android.view.LayoutInflater;
 
 
-public class ListViewAdapter extends ArrayAdapter<ListViewModel>{
-
-private ArrayList<ListViewModel> listViewModels;
-private Context context;
-private ListViewModel listViewModel;
-private EditText description;
-private EditText login;
-private EditText password;
-
-    private ArrayList<ListViewModel> testViewModels = new ArrayList<>();
-    private ArrayList <Long> userID = new ArrayList<>();
+public class ListViewAdapter extends ArrayAdapter<ListViewModel>{private ArrayList<ListViewModel> listViewModels;
+    private Context context;
+    private ListViewModel listViewModel;
+    private EditText description;
+    private EditText login;
+    private EditText password;
 
     public ListViewAdapter(@NonNull Context context, int resource, ArrayList<ListViewModel> listViewModels) {
         super(context, resource, listViewModels);
@@ -40,7 +35,7 @@ private EditText password;
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        listViewModel = listViewModels.get(position);
+        listViewModel = getItem(position);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.list_view_model, null);
@@ -53,9 +48,13 @@ private EditText password;
         login.setText(listViewModel.getLogin());
         password.setText(listViewModel.getPassword());
 
-        description.addTextChangedListener(new ListTextWatcher(listViewModel));
-        login.addTextChangedListener(new ListTextWatcher(listViewModel));
-        password.addTextChangedListener(new ListTextWatcher(listViewModel));
+        description.addTextChangedListener(new ListTextWatcher(listViewModel,"DESCRIPTION"));
+        login.addTextChangedListener(new ListTextWatcher(listViewModel,"LOGIN"));
+        password.addTextChangedListener(new ListTextWatcher(listViewModel,"PASSWORD"));
+
+        description.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
+        login.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
+        password.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
 
         return view;
     }
@@ -71,6 +70,8 @@ private EditText password;
     public ListViewModel getItem(int position) {
         return listViewModels.get(position);
     }
+
+
 
 
 }
