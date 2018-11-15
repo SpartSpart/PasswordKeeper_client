@@ -31,8 +31,14 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0' //Конвертер JSON, можно, если предпочитаете, использовать Jackson
     implementation 'com.android.support:recyclerview-v7:27.1.1' //RecyclerView
 
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.0.0.RELEASE'
+
+    // implementation('org.springframework.security:spring-security-crypto:3.1.1')
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+
 
 }

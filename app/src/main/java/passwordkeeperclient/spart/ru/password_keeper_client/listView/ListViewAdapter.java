@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
 import passwordkeeperclient.spart.ru.password_keeper_client.listview.model.ListViewModel;
@@ -71,7 +72,19 @@ public class ListViewAdapter extends ArrayAdapter<ListViewModel>{private ArrayLi
         return listViewModels.get(position);
     }
 
+    public void deleteVoidRows(){
+        for (Iterator<ListViewModel> iterator=listViewModels.iterator();iterator.hasNext();){
+            ListViewModel model = iterator.next();
+            if(
+            model.getDescription().equals("")
+            &&model.getLogin().equals("")
+            &&model.getPassword().equals("")){
 
+                iterator.remove();
+                notifyDataSetInvalidated();
+            }
+        }
 
+    }
 
 }

@@ -27,7 +27,6 @@ import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretMode
 import passwordkeeperclient.spart.ru.password_keeper_client.listview.ListViewAdapter;
 import passwordkeeperclient.spart.ru.password_keeper_client.listview.model.ListViewModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.AddSecret;
-import passwordkeeperclient.spart.ru.password_keeper_client.resonses.AddUser;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.GetSecrets;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.UpdateSecrets;
 
@@ -223,8 +222,10 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        if (bool)
+        if (bool) {
+            adapter.deleteVoidRows();
             Toast.makeText(getBaseContext(), "Updated", Toast.LENGTH_LONG).show();
+        }
         else
             Toast.makeText(getBaseContext(), "No secrets to Update", Toast.LENGTH_LONG).show();
     }

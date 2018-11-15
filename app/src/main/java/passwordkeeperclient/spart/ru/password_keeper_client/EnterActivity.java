@@ -16,8 +16,11 @@ import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
+import javax.crypto.Cipher;
+
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
+import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.CryptoClass;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.LogIn;
 
 public class EnterActivity extends AppCompatActivity {
@@ -42,7 +45,7 @@ public class EnterActivity extends AppCompatActivity {
         bar = findViewById(R.id.progressBarRound);
         Toolbar toolbar = findViewById(R.id.enterToolbar);
         setSupportActionBar(toolbar);
-        ApiConnection.setBaseUrl(getHost(),getPort());
+        ApiConnection.setBaseUrl(getHost(), getPort());
         try {
             apiService = ApiConnection.getApiService();
         } catch (Exception e) {
@@ -51,6 +54,21 @@ public class EnterActivity extends AppCompatActivity {
 
 
     }
+
+//String result;
+//        public void showMainActivity(View view) throws Exception {
+//        String s = "Spartak";
+//            result = CryptoClass.fileProcessor(Cipher.ENCRYPT_MODE, key, s);
+//            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+//    }
+//
+//String key = "12345678912345678912345678912345";
+//
+//    public void showRegistrationActivity(View view) {
+//        String resultDecrypt = CryptoClass.fileProcessor(Cipher.DECRYPT_MODE, key, result);
+//        Toast.makeText(getApplicationContext(), resultDecrypt, Toast.LENGTH_LONG).show();
+//    }
+
 
 
     public void showMainActivity(View view) throws Exception {
@@ -78,6 +96,8 @@ public class EnterActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
     public void showRegistrationActivity(View view) {
         Intent intObj = new Intent(this, RegistrationActivity.class);
@@ -109,9 +129,11 @@ public class EnterActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    String getHost(){return sharedPreferences.getString("Host","");}
+    String getHost() {
+        return sharedPreferences.getString("Host", "");
+    }
 
-    String getPort(){
-        return sharedPreferences.getString("Port","");
+    String getPort() {
+        return sharedPreferences.getString("Port", "");
     }
 }
