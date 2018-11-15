@@ -16,7 +16,7 @@ import retrofit2.Response;
  * Created by Pamela on 15.11.2018.
  */
 
-public class UpdateSecrets extends AsyncTask<Void, Void, Void> {
+public class UpdateSecrets extends AsyncTask<Void, Void, Boolean> {
     private String authorization;
     private List<SecretModel> secretModels;
 
@@ -26,7 +26,7 @@ public class UpdateSecrets extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Boolean doInBackground(Void... voids) {
 
         ApiService apiService = ApiConnection.getApiService();
 
@@ -35,12 +35,12 @@ public class UpdateSecrets extends AsyncTask<Void, Void, Void> {
         try {
             Response<Void> response = call.execute();
             if (response.isSuccessful())
-                return response.body();
+                return true;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return false;
     }
 }

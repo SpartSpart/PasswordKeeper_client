@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ListViewModel> listViewModels;
     ListViewAdapter adapter;
     private String authorization;
-    public static Set<Long> changedID = new HashSet<>(); //For saving id of objects that were changed in the listView for further changing in DB
+    public static Set<Integer> changedID = new HashSet<>(); //For saving id of objects that were changed in the listView for further changing in DB
+
 
 
     @Override
@@ -85,22 +87,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_save: {
                 updateSecrets();
-                Toast.makeText(this, changedID.toString(), Toast.LENGTH_LONG).show();
                 return true;
             }
             case R.id.action_new: {
                 setSecretDialog("New Secret", "Enter Data", "", "", "");
+
                 return true;
             }
         }
@@ -181,9 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-
                 adapter.notifyDataSetChanged();
-
             }
         });
 
@@ -200,22 +198,35 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<SecretModel> secretModels = new ArrayList<>();
 //        HashSet <String> set= new HashSet <String>();
         Iterator iterator = changedID.iterator();
-        while (iterator.hasNext()){
-            long id = (long) iterator.next();
-            String description = listViewModels.get((int) id).getDescription();
-            String login = listViewModels.get((int) id).getLogin();
-            String password = listViewModels.get((int) id).getPassword();
+        while (iterator.hasNext()) {
+            int i = (int) iterator.next();
+            Long id = listViewModels.get(i).getId();
+            String description = listViewModels.get(i).getDescription();
+            String login = listViewModels.get(i).getLogin();
+            String password = listViewModels.get(i).getPassword();
             secretModels.add(new SecretModel(id, description, login, password));
         }
-
-
+        changedID.clear();
         return secretModels;
     }
 
     private void updateSecrets() {
-        UpdateSecrets updateSecrets = new UpdateSecrets(authorization, secretsToUpdate());
-        updateSecrets.execute();
-        Toast.makeText(getBaseContext(), "Updated", Toast.LENGTH_LONG).show();
+        List<SecretModel> secretModels = secretsToUpdate();
+        boolean bool = false;
+        if (!secretModels.isEmpty()) {
+            UpdateSecrets updateSecrets = new UpdateSecrets(authorization, secretModels);
+            try {
+                bool = updateSecrets.execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        if (bool)
+            Toast.makeText(getBaseContext(), "Updated", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(getBaseContext(), "No secrets to Update", Toast.LENGTH_LONG).show();
     }
 
 }

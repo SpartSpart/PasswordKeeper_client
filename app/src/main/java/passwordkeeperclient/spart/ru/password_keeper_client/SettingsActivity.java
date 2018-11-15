@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.support.v7.widget.Toolbar;
 
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
+
 public class SettingsActivity extends AppCompatActivity {
     private EditText host;
     private EditText port;
@@ -50,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
             editor.putString("Host",preferenceHost);
             editor.putString("Port",preferencePort);
             editor.commit();
+            ApiConnection.setBaseUrl(getHost(),getPort());
             finish();
             return true;
         }
@@ -58,9 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    String getHost(){
-        return sharedPreferences.getString("Host","");
-    }
+    String getHost(){return sharedPreferences.getString("Host","");}
 
     String getPort(){
         return sharedPreferences.getString("Port","");

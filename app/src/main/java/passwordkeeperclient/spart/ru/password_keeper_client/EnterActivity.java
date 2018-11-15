@@ -1,7 +1,9 @@
 package passwordkeeperclient.spart.ru.password_keeper_client;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -26,10 +28,12 @@ public class EnterActivity extends AppCompatActivity {
     private ProgressBar bar;
     private ApiService apiService;
     private String authorization;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         setContentView(R.layout.activity_enter);
         login = findViewById(R.id.loginText);
         password = findViewById(R.id.passwordText);
@@ -38,7 +42,12 @@ public class EnterActivity extends AppCompatActivity {
         bar = findViewById(R.id.progressBarRound);
         Toolbar toolbar = findViewById(R.id.enterToolbar);
         setSupportActionBar(toolbar);
-        apiService = ApiConnection.getApiService();
+        ApiConnection.setBaseUrl(getHost(),getPort());
+        try {
+            apiService = ApiConnection.getApiService();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Check Connection Settings", Toast.LENGTH_LONG).show();
+        }
 
 
     }
@@ -63,6 +72,9 @@ public class EnterActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
             } catch (ExecutionException e) {
                 Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+            }
+            catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Check Connection Settings", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -95,5 +107,11 @@ public class EnterActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    String getHost(){return sharedPreferences.getString("Host","");}
+
+    String getPort(){
+        return sharedPreferences.getString("Port","");
     }
 }

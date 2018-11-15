@@ -48,11 +48,11 @@ public class ListViewAdapter extends ArrayAdapter<ListViewModel>{private ArrayLi
         login.setText(listViewModel.getLogin());
         password.setText(listViewModel.getPassword());
 
-        description.addTextChangedListener(new ListTextWatcher(listViewModel,"DESCRIPTION"));
-        login.addTextChangedListener(new ListTextWatcher(listViewModel,"LOGIN"));
-        password.addTextChangedListener(new ListTextWatcher(listViewModel,"PASSWORD"));
+        description.addTextChangedListener(new ListTextWatcher(listViewModel,position,"DESCRIPTION"));
+        login.addTextChangedListener(new ListTextWatcher(listViewModel,position,"LOGIN"));
+        password.addTextChangedListener(new ListTextWatcher(listViewModel,position,"PASSWORD"));
 
-        description.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
+        description.setOnLongClickListener(new ListOnLongClickListener( listViewModel));
         login.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
         password.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
 
