@@ -1,20 +1,16 @@
 package passwordkeeperclient.spart.ru.password_keeper_client;
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,8 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
 import passwordkeeperclient.spart.ru.password_keeper_client.listview.ListViewAdapter;
 import passwordkeeperclient.spart.ru.password_keeper_client.listview.model.ListViewModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.AddSecret;
@@ -36,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     ListViewAdapter adapter;
     private String authorization;
     public static Set<Integer> changedID = new HashSet<>(); //For saving id of objects that were changed in the listView for further changing in DB
-
 
 
     @Override
@@ -60,15 +55,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buildListModel(ArrayList<SecretModel> secretModels) {
+        Long id;
+        String description;
+        String login;
+        String password;
 
         if (!secretModels.isEmpty()) {
             for (SecretModel secret : secretModels) {
-                ListViewModel model = new ListViewModel(
-                        secret.getId(),
-                        secret.getDescription(),
-                        secret.getLogin(),
-                        secret.getPassword()
-                );
+                id = secret.getId();
+                description = Crypto.decryptString(secret.getDescription());
+                login = Crypto.decryptString(secret.getLogin());
+                password = Crypto.decryptString(secret.getPassword());
+                ListViewModel model = new ListViewModel(id, description, login, password);
                 listViewModels.add(model);
             }
 
@@ -94,7 +92,11 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_save: {
-                updateSecrets();
+                try {
+                    updateSecrets();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error:" + e.toString(), Toast.LENGTH_LONG).show();
+                }
                 return true;
             }
             case R.id.action_new: {
@@ -161,10 +163,24 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                AddSecret addSecret = new AddSecret(authorization,
-                        descriptionText.getText().toString(),
-                        loginText.getText().toString(),
-                        passwordText.getText().toString());
+                String description = descriptionText.getText().toString();
+                String login = loginText.getText().toString();
+                String password = passwordText.getText().toString();
+
+                if (description.equals("") && login.equals("") && password.equals(""))
+                    return;
+
+                AddSecret addSecret = null;
+                try {
+                    addSecret = new AddSecret(authorization,
+                            Crypto.encryptString(description),
+                            Crypto.encryptString(login),
+                            Crypto.encryptString(password));
+                } catch (Exception e) {
+                    Toast.makeText(getBaseContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+                }
+
+
                 try {
                     Long id = addSecret.execute().get();
                     if (id != null) {
@@ -193,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private List<SecretModel> secretsToUpdate() {
+    private List<SecretModel> secretsToUpdate() throws Exception {
         ArrayList<SecretModel> secretModels = new ArrayList<>();
 //        HashSet <String> set= new HashSet <String>();
         Iterator iterator = changedID.iterator();
@@ -203,13 +219,19 @@ public class MainActivity extends AppCompatActivity {
             String description = listViewModels.get(i).getDescription();
             String login = listViewModels.get(i).getLogin();
             String password = listViewModels.get(i).getPassword();
-            secretModels.add(new SecretModel(id, description, login, password));
+            if (description.equals("") && login.equals("") && password.equals(""))
+                secretModels.add(new SecretModel(id, description, login, password));
+            else
+                secretModels.add(new SecretModel(id,
+                        Crypto.encryptString(description),
+                        Crypto.encryptString(login),
+                        Crypto.encryptString(password)));
         }
         changedID.clear();
         return secretModels;
     }
 
-    private void updateSecrets() {
+    private void updateSecrets() throws Exception {
         List<SecretModel> secretModels = secretsToUpdate();
         boolean bool = false;
         if (!secretModels.isEmpty()) {
@@ -225,9 +247,9 @@ public class MainActivity extends AppCompatActivity {
         if (bool) {
             adapter.deleteVoidRows();
             Toast.makeText(getBaseContext(), "Updated", Toast.LENGTH_LONG).show();
-        }
-        else
+        } else
             Toast.makeText(getBaseContext(), "No secrets to Update", Toast.LENGTH_LONG).show();
     }
+
 
 }

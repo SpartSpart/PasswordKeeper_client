@@ -1,18 +1,9 @@
 package passwordkeeperclient.spart.ru.password_keeper_client.api;
 
-import android.content.SharedPreferences;
-
-import passwordkeeperclient.spart.ru.password_keeper_client.SettingsActivity;
-
 public class ApiConnection {
 
-    public static String BASE_URL="";
-   // private SettingsActivity settingsActivity=new SettingsActivity();
+    private static String BASE_URL="";
     private ApiConnection() {}
-       // String connection = settingsActivity.getHost()+":"+settingsActivity.getPort();
-        //BASE_URL = "http://"+connection+"/api/";
-
-
 
     public static ApiService getApiService() throws IllegalArgumentException {
 

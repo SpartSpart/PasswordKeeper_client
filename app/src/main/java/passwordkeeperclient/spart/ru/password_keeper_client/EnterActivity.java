@@ -16,11 +16,9 @@ import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.crypto.Cipher;
-
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
-import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.CryptoClass;
+import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.LogIn;
 
 public class EnterActivity extends AppCompatActivity {
@@ -83,6 +81,8 @@ public class EnterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Login Correct", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getBaseContext(),MainActivity.class);
                     intent.putExtra("Authorization",authorization);
+                    Crypto.setKeys(login.getText().toString(),password.getText().toString());
+//                    new Crypto().setKey(login.getText().toString());
                     startActivity(intent);
                 } else
                     Toast.makeText(getApplicationContext(), "Login/Password Incorrect", Toast.LENGTH_LONG).show();
@@ -136,4 +136,6 @@ public class EnterActivity extends AppCompatActivity {
     String getPort() {
         return sharedPreferences.getString("Port", "");
     }
+
+
 }
