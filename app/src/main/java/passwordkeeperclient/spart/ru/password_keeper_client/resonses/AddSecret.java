@@ -12,10 +12,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-/**
- * Created by Pamela on 14.11.2018.
- */
-
 public class AddSecret extends AsyncTask<Void, Void, Long> {
     private String authorization;
     private String description;

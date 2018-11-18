@@ -20,10 +20,6 @@ import android.view.LayoutInflater;
 
 public class ListViewAdapter extends ArrayAdapter<ListViewModel>{private ArrayList<ListViewModel> listViewModels;
     private Context context;
-    private ListViewModel listViewModel;
-    private EditText description;
-    private EditText login;
-    private EditText password;
 
     public ListViewAdapter(@NonNull Context context, int resource, ArrayList<ListViewModel> listViewModels) {
         super(context, resource, listViewModels);
@@ -36,14 +32,14 @@ public class ListViewAdapter extends ArrayAdapter<ListViewModel>{private ArrayLi
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        listViewModel = getItem(position);
+        ListViewModel listViewModel = getItem(position);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.list_view_model, null);
 
-        description = view.findViewById(R.id.description);
-        login = view.findViewById(R.id.login);
-        password = view.findViewById(R.id.password);
+        EditText description = view.findViewById(R.id.description);
+        EditText login = view.findViewById(R.id.login);
+        EditText password = view.findViewById(R.id.password);
 
         description.setText(listViewModel.getDescription());
         login.setText(listViewModel.getLogin());
@@ -53,7 +49,7 @@ public class ListViewAdapter extends ArrayAdapter<ListViewModel>{private ArrayLi
         login.addTextChangedListener(new ListTextWatcher(listViewModel,position,"LOGIN"));
         password.addTextChangedListener(new ListTextWatcher(listViewModel,position,"PASSWORD"));
 
-        description.setOnLongClickListener(new ListOnLongClickListener( listViewModel));
+        description.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
         login.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
         password.setOnLongClickListener(new ListOnLongClickListener(listViewModel));
 

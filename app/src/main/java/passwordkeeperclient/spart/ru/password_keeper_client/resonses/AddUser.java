@@ -10,9 +10,6 @@ import passwordkeeperclient.spart.ru.password_keeper_client.api.model.UserModel;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by Pamela on 11.11.2018.
- */
 
 public class AddUser extends AsyncTask <Void,Void,Boolean> {
     private String login;

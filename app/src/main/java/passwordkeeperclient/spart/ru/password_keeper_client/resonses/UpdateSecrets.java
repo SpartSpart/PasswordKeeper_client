@@ -12,9 +12,6 @@ import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretMode
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by Pamela on 15.11.2018.
- */
 
 public class UpdateSecrets extends AsyncTask<Void, Void, Boolean> {
     private String authorization;

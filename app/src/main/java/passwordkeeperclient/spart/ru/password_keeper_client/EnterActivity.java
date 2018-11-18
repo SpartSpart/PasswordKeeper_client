@@ -9,14 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
-
-import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
 import passwordkeeperclient.spart.ru.password_keeper_client.resonses.LogIn;
@@ -24,11 +20,6 @@ import passwordkeeperclient.spart.ru.password_keeper_client.resonses.LogIn;
 public class EnterActivity extends AppCompatActivity {
     private EditText login;
     private EditText password;
-    private Button enterBtn;
-    private Button registrationBtn;
-    private ProgressBar bar;
-    private ApiService apiService;
-    private String authorization;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -38,39 +29,23 @@ public class EnterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_enter);
         login = findViewById(R.id.loginText);
         password = findViewById(R.id.passwordText);
-        enterBtn = findViewById(R.id.enterBtn);
-        registrationBtn = findViewById(R.id.registrationBtn);
-        bar = findViewById(R.id.progressBarRound);
+//        Button enterBtn = findViewById(R.id.enterBtn);
+        //Button registrationBtn = findViewById(R.id.registrationBtn);
+        //ProgressBar bar = findViewById(R.id.progressBarRound);
         Toolbar toolbar = findViewById(R.id.enterToolbar);
         setSupportActionBar(toolbar);
         ApiConnection.setBaseUrl(getHost(), getPort());
-        try {
-            apiService = ApiConnection.getApiService();
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Check Connection Settings", Toast.LENGTH_LONG).show();
-        }
+//        try {
+//          //  ApiService apiService = ApiConnection.getApiService();
+//        } catch (Exception e) {
+//            Toast.makeText(getApplicationContext(), "Check Connection Settings", Toast.LENGTH_LONG).show();
+//        }
 
 
     }
 
-//String result;
-//        public void showMainActivity(View view) throws Exception {
-//        String s = "Spartak";
-//            result = CryptoClass.fileProcessor(Cipher.ENCRYPT_MODE, key, s);
-//            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-//    }
-//
-//String key = "12345678912345678912345678912345";
-//
-//    public void showRegistrationActivity(View view) {
-//        String resultDecrypt = CryptoClass.fileProcessor(Cipher.DECRYPT_MODE, key, result);
-//        Toast.makeText(getApplicationContext(), resultDecrypt, Toast.LENGTH_LONG).show();
-//    }
-
-
-
     public void showMainActivity(View view) throws Exception {
-        authorization = login.getText() + ":" + password.getText();
+        String authorization = login.getText() + ":" + password.getText();
         LogIn logIn = new LogIn(authorization);
         String sessionId;
 
@@ -80,7 +55,7 @@ public class EnterActivity extends AppCompatActivity {
                 if (sessionId != null) {
                     Toast.makeText(getApplicationContext(), "Login Correct", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getBaseContext(),MainActivity.class);
-                    intent.putExtra("Authorization",authorization);
+                    intent.putExtra("Authorization", authorization);
                     Crypto.setKeys(login.getText().toString(),password.getText().toString());
 //                    new Crypto().setKey(login.getText().toString());
                     startActivity(intent);

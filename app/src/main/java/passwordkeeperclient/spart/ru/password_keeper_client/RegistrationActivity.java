@@ -18,8 +18,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText passwordTxt;
     private EditText confirmPasswordTxt;
     private EditText emailTxt;
-    private Button registrationBtn;
-    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +27,8 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordTxt = findViewById(R.id.passwordText);
         confirmPasswordTxt = findViewById(R.id.confirmPasswordText);
         emailTxt = findViewById(R.id.emailText);
-        registrationBtn = findViewById(R.id.registrationBtn);
-        apiService = ApiConnection.getApiService();
+        Button registrationBtn = findViewById(R.id.registrationBtn);
+        ApiService apiService = ApiConnection.getApiService();
 
         registrationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,9 +69,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     boolean checkPasswords (String password, String confirmPassword){
-        if(password.equals(confirmPassword))
-            return true;
-        return false;
+        return password.equals(confirmPassword);
     }
 
 }

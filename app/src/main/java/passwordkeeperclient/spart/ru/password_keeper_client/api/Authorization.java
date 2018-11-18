@@ -1,9 +1,7 @@
 package passwordkeeperclient.spart.ru.password_keeper_client.api;
 
-import android.net.wifi.hotspot2.pps.Credential;
-
+import android.support.annotation.NonNull;
 import java.io.IOException;
-
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -18,7 +16,7 @@ public class Authorization implements Interceptor {
         }
 
         @Override
-        public Response intercept(Chain chain) throws IOException {
+        public Response intercept(@NonNull Chain chain) throws IOException {
             Request request = chain.request();
             Request authenticatedRequest = request.newBuilder()
                     .header("Authorization", credentials).build();

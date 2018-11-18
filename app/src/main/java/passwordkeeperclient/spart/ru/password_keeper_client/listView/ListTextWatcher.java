@@ -11,7 +11,7 @@ public class ListTextWatcher implements TextWatcher {
     private String atributeType;
     private int position;
 
-    public ListTextWatcher(ListViewModel listViewModel, int position, String atributeType) {
+    ListTextWatcher(ListViewModel listViewModel, int position, String atributeType) {
         this.listViewModel = listViewModel;
         this.atributeType = atributeType;
         this.position = position;
