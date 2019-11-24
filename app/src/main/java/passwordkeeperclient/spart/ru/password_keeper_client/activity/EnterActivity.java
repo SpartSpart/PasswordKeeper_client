@@ -84,11 +84,10 @@ public class EnterActivity extends AppCompatActivity {
     }
 
 
-
-
-    private void forgetPassword(View view){
-        Toast.makeText(this, "Doesn't work yet", Toast.LENGTH_SHORT).show();
+    public void forgetPassword(View view){
+        Toast.makeText(this, "Doesn't work yet.", Toast.LENGTH_SHORT).show();
     }
+
 
     private void fillLoginPasswordFromMemory(){
         String login = sharedPreferences.getString("Login","");
