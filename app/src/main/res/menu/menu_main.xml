@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_save"
-        android:orderInCategory="100"
-        android:title="@string/action_save"
-        android:icon="@drawable/ic_save_48dp"
-        app:showAsAction="always"/>
-    <item
         android:id="@+id/action_new"
         android:orderInCategory="100"
         android:title="New"
         android:icon="@drawable/ic_new_48dp"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:title="@string/action_save"
+        android:icon="@drawable/ic_refresh_48dp"
+        app:showAsAction="always"/>
+
 
 </menu>
 

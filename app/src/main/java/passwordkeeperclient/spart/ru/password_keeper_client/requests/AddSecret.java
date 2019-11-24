@@ -1,35 +1,39 @@
-package passwordkeeperclient.spart.ru.password_keeper_client.resonses;
+package passwordkeeperclient.spart.ru.password_keeper_client.requests;
 
 import android.os.AsyncTask;
 import android.util.Base64;
 
 import java.io.IOException;
-import java.util.Collection;
 
-import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class GetSecrets extends AsyncTask<Void, Void, Collection<SecretModel>> {
-    private String authorization;
 
-    public GetSecrets(String authorization) {
+public class AddSecret extends AsyncTask<Void, Void, Long> {
+    private String authorization;
+    private SecretModel secretModel;
+
+    public AddSecret(String authorization, SecretModel secretModel) {
         this.authorization = authorization;
+        this.secretModel = secretModel;
     }
 
+
     @Override
-    protected Collection<SecretModel> doInBackground(Void... voids) {
+    protected Long doInBackground(Void... voids) {
 
         ApiService apiService = ApiConnection.getApiService();
 
         String authHeader = "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP);
-        Call<Collection<SecretModel>> call = apiService.getSecrests(authHeader);
+        Call<Long> call = apiService.addSecret(authHeader, secretModel);
         try {
-            Response<Collection<SecretModel>> response = call.execute();
+            Response<Long> response = call.execute();
             if (response.isSuccessful())
                 return response.body();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package passwordkeeperclient.spart.ru.password_keeper_client.resonses;
+package passwordkeeperclient.spart.ru.password_keeper_client.requests;
 
 import android.os.AsyncTask;
 

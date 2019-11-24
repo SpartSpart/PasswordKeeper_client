@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="passwordkeeperclient.spart.ru.password_keeper_client.EnterActivity">
+    tools:context="passwordkeeperclient.spart.ru.password_keeper_client.activity.EnterActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

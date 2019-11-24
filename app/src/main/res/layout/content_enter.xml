@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="passwordkeeperclient.spart.ru.password_keeper_client.EnterActivity"
+    tools:context="passwordkeeperclient.spart.ru.password_keeper_client.activity.EnterActivity"
     tools:showIn="@layout/activity_enter">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,6 +23,7 @@
             android:layout_height="46dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
+            android:textColor="@color/defaultTextColor"
             android:text="@string/signInText"
             android:textSize="18sp" />
 
@@ -47,34 +48,53 @@
             android:inputType="textPassword"
             tools:ignore="TextFields"/>
 
-        <Button
-            android:id="@+id/enterBtn"
+        <CheckBox
+            android:id="@+id/checkRememberLoginPassword"
+            android:buttonTint="@color/colorPrimary"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/passwordText"
+            android:textColor="@color/defaultTextColor"
+            android:textSize="18sp"
+            android:text="@string/remember_me"
+            android:layout_centerHorizontal="true" />
+
+
+        <Button
+            android:id="@+id/enterBtn"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="230dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/checkRememberLoginPassword"
             android:layout_centerHorizontal="true"
             android:onClick="showMainActivity"
-            android:text="@string/enter"/>
+            android:text="@string/enter" />
 
 
         <Button
             android:id="@+id/registrationBtn"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/enterBtn"
             android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/colorPrimary"
             android:onClick="showRegistrationActivity"
             android:text="@string/registration"/>
 
-        <ProgressBar
-            android:id="@+id/progressBarRound"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/forgetPassword"
             android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/forget_password"
+            android:layout_centerHorizontal="true"
+            android:textSize="18sp"
+            android:textColor="@color/defaultTextColor"
+            android:clickable="true"
+            android:onClick="forgetPassword"
             android:layout_below="@+id/registrationBtn"
-            style="@style/Base.Widget.AppCompat.Spinner"
-            android:foreground="@android:color/black"
-            android:indeterminate="true"
-            android:visibility="invisible"/>
+            />
 
     </RelativeLayout>
 

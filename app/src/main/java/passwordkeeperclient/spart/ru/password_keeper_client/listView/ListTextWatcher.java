@@ -3,7 +3,7 @@ package passwordkeeperclient.spart.ru.password_keeper_client.listview;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import passwordkeeperclient.spart.ru.password_keeper_client.MainActivity;
+import passwordkeeperclient.spart.ru.password_keeper_client.activity.MainActivity;
 import passwordkeeperclient.spart.ru.password_keeper_client.listview.model.ListViewModel;
 
 public class ListTextWatcher implements TextWatcher {
@@ -29,22 +29,7 @@ public class ListTextWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
 
-        switch (atributeType) {
-            case "DESCRIPTION": {
-                listViewModel.setDescription(s.toString());
-                break;
-            }
-            case "LOGIN": {
-                listViewModel.setLogin(s.toString());
-                break;
-            }
-            case "PASSWORD": {
-                listViewModel.setPassword(s.toString());
-                break;
-            }
-        }
 
-        MainActivity.changedID.add(position);
     }
 
 

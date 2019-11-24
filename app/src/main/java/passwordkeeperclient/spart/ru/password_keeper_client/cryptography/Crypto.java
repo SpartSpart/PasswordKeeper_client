@@ -8,16 +8,16 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
 
-    private static String key = null;
-    private static String initVector = null;
+    private static String key = "aesEncryptionKey";
+    private static String initVector = "encryptionIntVec";
 
 
-    public static void setKeys(String secretKey, String secretVector) {
+    public static void setKeys(String secretKeyLikeLogin) {
         String specialKey = "aesEncryptionKey";
         String spaecialInitVector = "encryptionIntVec";
 
-        key = secretKey + specialKey;
-        initVector = secretVector + spaecialInitVector;
+        key = secretKeyLikeLogin + specialKey;
+        initVector = secretKeyLikeLogin + spaecialInitVector;
 
         key = key.substring(0, 16);
         initVector = initVector.substring(0, 16);

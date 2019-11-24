@@ -1,4 +1,4 @@
-package passwordkeeperclient.spart.ru.password_keeper_client;
+package passwordkeeperclient.spart.ru.password_keeper_client.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,9 +9,10 @@ import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
+import passwordkeeperclient.spart.ru.password_keeper_client.R;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
-import passwordkeeperclient.spart.ru.password_keeper_client.resonses.AddUser;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.AddUser;
 
 public class RegistrationActivity extends AppCompatActivity {
     private EditText loginTxt;

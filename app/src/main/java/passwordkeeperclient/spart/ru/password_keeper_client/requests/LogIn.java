@@ -1,8 +1,9 @@
-package passwordkeeperclient.spart.ru.password_keeper_client.resonses;
+package passwordkeeperclient.spart.ru.password_keeper_client.requests;
 
 
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import retrofit2.Response;
 
 public class LogIn extends AsyncTask<Void, Void, String> {
 private String authorization;
+private final String SERVER_CONNECTION_FAILED = "Server connection failed";
 
     public LogIn(String authorization) {
         this.authorization = authorization;
@@ -29,21 +31,12 @@ private String authorization;
         try {
             Response<Void> response = call.execute();
             if (response.isSuccessful()) {
-//                    String cookie = response.headers().get("Set-Cookie");
-//                    if (nonNull(cookie)) {
-//                        return Arrays.stream(cookie.split(";"))
-//                                .map(String::trim)
-//                                .map(e -> e.split("="))
-//                                .filter(e -> e[0].equals("JSESSIONID"))
-//                                .map(e -> e[1])
-//                                .findAny();
-//                    }
                 String fullCookie = response.headers().get("Set-Cookie");
                 String sessionID = (fullCookie.substring(0, fullCookie.indexOf(";"))).replace("JSESSIONID=", "");
                 return sessionID;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            return SERVER_CONNECTION_FAILED;
         }
 
         return null;
