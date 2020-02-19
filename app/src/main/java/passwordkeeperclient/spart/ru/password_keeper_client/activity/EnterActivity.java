@@ -7,17 +7,15 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
 import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.LogIn;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.user.LogIn;
 
 public class EnterActivity extends AppCompatActivity {
     private EditText loginEditTxt;
@@ -25,6 +23,8 @@ public class EnterActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private CheckBox rememberCheckBox;
     private final String SERVER_CONNECTION_FAILED = "Server connection failed";
+    private final String WRONG_LOGIN_OR_PASSWORD = "Login/Password Incorrect";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,30 @@ public class EnterActivity extends AppCompatActivity {
 
     }
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_enter, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//
+//        switch (id) {
+//            case R.id.connection_settings: {
+//                Intent intent = new Intent(getBaseContext(), ConnectionSettingsActivity.class);
+//                //intent.putExtra("Authorization", authorization;
+//                startActivity(intent);
+//                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -48,30 +72,34 @@ public class EnterActivity extends AppCompatActivity {
 
     public void showMainActivity(View view) {
         String authorization = loginEditTxt.getText() + ":" + passwordEditTxt.getText();
-        LogIn logIn = new LogIn(authorization);
+        LogIn logIn = new LogIn(this, authorization);
         String sessionId;
 
         {
             try {
                 sessionId = logIn.execute().get();
 
-                if (sessionId != null) {
-                    if (sessionId.equals(SERVER_CONNECTION_FAILED))
-                        Toast.makeText(this, SERVER_CONNECTION_FAILED, Toast.LENGTH_SHORT).show();
-                    else {
+                if (sessionId == null)
+                     Toast.makeText(this, SERVER_CONNECTION_FAILED, Toast.LENGTH_SHORT).show();
+                     else
+                        if (sessionId.isEmpty()){
+                            Toast.makeText(this,WRONG_LOGIN_OR_PASSWORD, Toast.LENGTH_SHORT).show();
+                    }
+                     else {
                         Toast.makeText(getApplicationContext(), "Login Correct", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                        intent.putExtra("Authorization", authorization);
+
                         Crypto.setKeys(loginEditTxt.getText().toString());
+
                         rememberLoginPasswordToMemory(rememberCheckBox.isChecked());
+
+                        Intent intent = new Intent(getBaseContext(), SecretActivity.class);
+                        intent.putExtra("Authorization", authorization);
                         startActivity(intent);
                     }
-                } else
-                    Toast.makeText(getApplicationContext(), "Login/Password Incorrect", Toast.LENGTH_LONG).show();
             } catch (InterruptedException e) {
-                Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
             } catch (ExecutionException e) {
-                Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
             }
         }
     }

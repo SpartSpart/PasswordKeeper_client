@@ -13,8 +13,8 @@ import java.util.concurrent.ExecutionException;
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.AddSecret;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.UpdateSecret;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.secret.AddSecret;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.secret.UpdateSecret;
 
 public class EditSecretActivity extends AppCompatActivity {
 
@@ -22,12 +22,9 @@ public class EditSecretActivity extends AppCompatActivity {
     private EditText secretLogin;
     private EditText secretPassword;
 
-
     private SecretModel secretModel;
+
     private String authorization;
-
-    private boolean newSecret;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +34,11 @@ public class EditSecretActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.editToolbar);
         setSupportActionBar(toolbar);
 
-
         secretDescription = findViewById(R.id.secretDescription);
         secretLogin = findViewById(R.id.secretLogin);
         secretPassword = findViewById(R.id.secretPassword);
 
-        authorization = MainActivity.authorization;
-        newSecret = true;
+        authorization = SecretActivity.authorization;
 
         secretModel = (SecretModel) getIntent().getSerializableExtra("SecretModel");
         if (secretModel != null) {
@@ -51,16 +46,13 @@ public class EditSecretActivity extends AppCompatActivity {
             secretDescription.setText(secretModel.getDescription());
             secretLogin.setText(secretModel.getLogin());
             secretPassword.setText(secretModel.getPassword());
-
-            newSecret = false;
         }
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        getMenuInflater().inflate(R.menu.menu_edit_secret, menu);
         return true;
     }
 
@@ -75,21 +67,22 @@ public class EditSecretActivity extends AppCompatActivity {
             }
             case R.id.action_save: {
                 try {
-                    saveSecret(getSecret(secretDescription.getText().toString(),
+
+                    SecretModel secret = getSecret(
+                            secretDescription.getText().toString(),
                             secretLogin.getText().toString(),
-                            secretPassword.getText().toString()));
-                } catch (ParseException e) {
-                    Toast.makeText(this, "Ошибка в вызове пункта меню", Toast.LENGTH_SHORT).show();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                            secretPassword.getText().toString()
+                    );
+                    saveSecret(secret);
+                } catch (Exception e) {
+                    Toast.makeText(this, "Save: " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
-                return true;
+                    return true;
+                }
             }
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
-    }
+
 
     private void saveSecret(SecretModel secretModel) throws ExecutionException, InterruptedException {
 
@@ -120,7 +113,7 @@ public class EditSecretActivity extends AppCompatActivity {
                 return secretModelLocal;
             } else Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this, "Ошибка формирования SecretModel", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "EditActivity: "+e.toString(), Toast.LENGTH_SHORT).show();
         }
 
         return null;
@@ -141,10 +134,6 @@ public class EditSecretActivity extends AppCompatActivity {
                 updateSecret.execute();
             }
 
-        } catch (InterruptedException e) {
-            Toast.makeText(this, "sendSecretToDB: " + e.toString(), Toast.LENGTH_SHORT).show();
-        } catch (ExecutionException e) {
-            Toast.makeText(this, "sendSecretToDB: " + e.toString(), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, "sendSecretToDB: " + e.toString(), Toast.LENGTH_SHORT).show();
         }

@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.AddUser;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.user.AddUser;
 
 public class RegistrationActivity extends AppCompatActivity {
     private EditText loginTxt;

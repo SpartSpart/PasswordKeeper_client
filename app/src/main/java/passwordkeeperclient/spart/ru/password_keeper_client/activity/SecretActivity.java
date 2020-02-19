@@ -13,19 +13,19 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.ExecutionException;
-
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
+import passwordkeeperclient.spart.ru.password_keeper_client.activity.additional.ExportDataCSV;
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.additional.SearchDataWatcher;
-import passwordkeeperclient.spart.ru.password_keeper_client.activity.additional.SecretListAdapter;
+import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.SecretListAdapter;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.DeleteSecret;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.GetSecrets;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.secret.DeleteSecret;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.secret.GetSecrets;
 
-public class MainActivity extends AppCompatActivity {
+public class SecretActivity extends AppCompatActivity {
     private ListView secretListView;
     private ArrayList<SecretModel> secretListModels;
     private SecretListAdapter secretListAdapter;
@@ -39,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         secretListModels = new ArrayList<>();
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_secret);
 
-        Toolbar toolbar = findViewById(R.id.mainToolbar);
+        Toolbar toolbar = findViewById(R.id.secretToolbar);
         setSupportActionBar(toolbar);
 
         searchData = findViewById(R.id.searchData);
@@ -64,9 +64,11 @@ public class MainActivity extends AppCompatActivity {
         refreshSecretListAdapter();
     }
 
-
     public void fillSecretList() {
-        ArrayList<SecretModel> secretModels = new ArrayList<>(getSecrets(authorization));
+        ArrayList<SecretModel> secretModels = null;
+
+        secretModels = new ArrayList<>(getSecrets(authorization));
+
         Long id;
         String description;
         String login;
@@ -83,25 +85,26 @@ public class MainActivity extends AppCompatActivity {
                 SecretModel model = new SecretModel(id, description, login, password);
                 secretListModels.add(model);
             }
-
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_secret, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         switch (id) {
+            case R.id.action_export_csv: {
+                ExportDataCSV exportDataCSV = new ExportDataCSV();
+                String result = exportDataCSV.exportData(secretListModels);
+                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+                return true;
+            }
             case R.id.action_refresh: {
                 secretListModels.clear();
                 fillSecretList();
@@ -115,32 +118,35 @@ public class MainActivity extends AppCompatActivity {
                 newSecret = true;
                 return true;
                }
+            case R.id.action_secret: {
+                showDocActivity();
+                return true;
+            }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
 
     public Collection<SecretModel> getSecrets(String authorization) {
         GetSecrets getSecrets = new GetSecrets(authorization);
-
         try {
             return getSecrets.execute().get();
-
-        } catch (InterruptedException e) {
-            Toast.makeText(this, "Error:" + e.toString(), Toast.LENGTH_LONG).show();
-        } catch (ExecutionException e) {
-            Toast.makeText(this, "Error:" + e.toString(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "getFilesInfo:" + e.toString(), Toast.LENGTH_LONG).show();
         }
-
         return null;
-
     }
 
     public void editSecret(SecretModel secretModel) {
         Intent intent = new Intent(getBaseContext(), EditSecretActivity.class);
         intent.putExtra("SecretModel", secretModel);
         startActivityForResult(intent,1);
+    }
+
+    private void showDocActivity(){
+        Intent intent = new Intent(getBaseContext(), DocActivity.class);
+        intent.putExtra("Authorization", authorization);
+        startActivity(intent);
     }
 
     @Override
@@ -151,17 +157,14 @@ public class MainActivity extends AppCompatActivity {
             if (newSecret)  //проверка на новую запись или обновляемую
                 secretListModels.add(secretModel);
             else {
-
                   secretListModels.get(selectedListPosition).setDescription(secretModel.getDescription());
                   secretListModels.get(selectedListPosition).setLogin(secretModel.getLogin());
                   secretListModels.get(selectedListPosition).setPassword(secretModel.getPassword());
             }
-
         }
         catch (Exception e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
-
         selectedListPosition = 0;
     }
 
@@ -197,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     private void deleteDialog(final Long secretId, final String secretDescription, final int listViewPosition){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Delete Secret");
+        builder.setTitle("Warning!");
         builder.setMessage("Delete "+secretDescription+"?");
 
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -244,3 +247,4 @@ public class MainActivity extends AppCompatActivity {
         }
 
 }
+

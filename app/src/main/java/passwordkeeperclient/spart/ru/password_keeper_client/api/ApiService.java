@@ -3,6 +3,8 @@ package passwordkeeperclient.spart.ru.password_keeper_client.api;
 import java.util.Collection;
 import java.util.List;
 
+import passwordkeeperclient.spart.ru.password_keeper_client.api.model.DocModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.model.FileModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.UserModel;
 import retrofit2.Call;
@@ -37,5 +39,22 @@ public interface ApiService {
 
     @POST("login/")
     Call<Void> loginUser(@Header("Authorization") String authHeader);
+
+    @GET("docs/")
+    Call<Collection<DocModel>> getDocs(@Header("Authorization") String authHeader);
+
+    @DELETE("docs/{id}")
+    Call<Void> deleteDoc(@Header("Authorization") String authHeader, @Path("id") long id);
+
+    @POST("docs/")
+    Call<Long> addDoc(@Header("Authorization") String authHeader, @Body DocModel secretModel);
+
+    @PUT("docs/{id}")
+    Call<Void> updateDoc(@Header("Authorization") String authHeader, @Path("id") long id, @Body DocModel docModel);
+
+    @GET("files/info/{id}")
+    Call<Collection<FileModel>> getFilesInfo(@Header("Authorization") String authHeader, @Path("id") long id);
+
+
 }
 

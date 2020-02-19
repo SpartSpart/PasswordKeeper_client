@@ -1,4 +1,4 @@
-package passwordkeeperclient.spart.ru.password_keeper_client.requests;
+package passwordkeeperclient.spart.ru.password_keeper_client.requests.secret;
 
 import android.os.AsyncTask;
 import android.util.Base64;
@@ -7,37 +7,32 @@ import java.io.IOException;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by Pamela on 24.11.2019.
- */
 
-public class DeleteSecret extends AsyncTask<Void, Void, Boolean> {
-
+public class AddSecret extends AsyncTask<Void, Void, Long> {
     private String authorization;
-    private Long id;
+    private SecretModel secretModel;
 
-
-
-    public DeleteSecret(String authorization, Long id) {
+    public AddSecret(String authorization, SecretModel secretModel) {
         this.authorization = authorization;
-        this.id = id;
-
+        this.secretModel = secretModel;
     }
 
+
     @Override
-    protected Boolean doInBackground(Void... voids) {
+    protected Long doInBackground(Void... voids) {
 
         ApiService apiService = ApiConnection.getApiService();
 
         String authHeader = "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP);
-        Call<Void> call = apiService.deleteSecret(authHeader,id);
+        Call<Long> call = apiService.addSecret(authHeader, secretModel);
         try {
-            Response<Void> response = call.execute();
+            Response<Long> response = call.execute();
             if (response.isSuccessful())
-                return true ;
+                return response.body();
 
         } catch (IOException e) {
             e.printStackTrace();
