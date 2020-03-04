@@ -2,6 +2,11 @@ package passwordkeeperclient.spart.ru.password_keeper_client.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,26 +17,33 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.DocListAdapter;
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.additional.SearchDataWatcher;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.DocModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.documents.DeleteDoc;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.documents.GetDocs;
 
 public class DocActivity extends AppCompatActivity {
+
     private ListView docListView;
-    private ArrayList<DocModel> docListModels;
+    private static ArrayList<DocModel> docListModels;
     private DocListAdapter docListAdapter;
-    public static String authorization;
     private boolean newDoc;
     private int selectedListPosition;
     private EditText searchData;
+
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +52,7 @@ public class DocActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_doc);
 
-        Toolbar toolbar = findViewById(R.id.docToolbar);
-        setSupportActionBar(toolbar);
-
         searchData = findViewById(R.id.searchData);
-
-        authorization = getIntent().getStringExtra("Authorization");
 
         selectedListPosition = 0;
 
@@ -55,18 +62,75 @@ public class DocActivity extends AppCompatActivity {
 
         SearchDataWatcher searchDataWatcher =new SearchDataWatcher(docListAdapter);
         searchData.addTextChangedListener(searchDataWatcher);
+
+        setNavigationMenuProperties();
     }
+
+    private void setNavigationMenuProperties(){
+        Toolbar toolbar = findViewById(R.id.docToolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(
+                this,drawer, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(toogle);
+        toogle.syncState();
+
+        navigationView = findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUserName = (TextView)headerView.findViewById(R.id.userName);
+        navUserName.setText(Principal.getLogin());
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.secrets: {
+                            showSecretActivity();
+                        break;
+                    }
+                    case R.id.docs: {
+
+                        break;
+                    }
+                }
+                 drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+            super.onBackPressed();
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshDocListAdapter();
+        navigationView.setCheckedItem(R.id.docs);
+    }
+
+    private void showSecretActivity() {
+        Intent intent = new Intent(getBaseContext(), SecretActivity.class);
+        startActivity(intent);
     }
 
     public void fillDocList() {
         ArrayList<DocModel> docModels = null;
 
-        docModels = new ArrayList<>(getDocs(authorization));
+        docModels = new ArrayList<>(getDocs());
 
         Long id;
         String document;
@@ -110,16 +174,13 @@ public class DocActivity extends AppCompatActivity {
                 return true;
             }
 
-            case R.id.action_secret:{
-                finish();
-            }
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    public Collection<DocModel> getDocs(String authorization) {
-        GetDocs getDocs = new GetDocs(authorization);
+    public Collection<DocModel> getDocs() {
+        GetDocs getDocs = new GetDocs();
         try {
             return getDocs.execute().get();
         } catch (Exception e) {
@@ -191,7 +252,7 @@ public class DocActivity extends AppCompatActivity {
 
             public void onClick(DialogInterface dialog, int which) {
 
-                DeleteDoc deleteDoc = new DeleteDoc(authorization, docId);
+                DeleteDoc deleteDoc = new DeleteDoc(docId);
                 deleteDoc.execute();
 
                 docListModels.remove(listViewPosition);
@@ -227,5 +288,9 @@ public class DocActivity extends AppCompatActivity {
 
     private void refreshFilteredSecrets(){
         docListAdapter.getFilter().filter(searchData.getText());
+    }
+
+    public static ArrayList<DocModel> getDocListView(){
+        return docListModels;
     }
 }

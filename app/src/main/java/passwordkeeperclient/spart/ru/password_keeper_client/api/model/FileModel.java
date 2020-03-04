@@ -13,22 +13,22 @@ public class FileModel {
     @Expose
     private long id;
 
-    @SerializedName("file_name")
+    @SerializedName("fileName")
     @Expose
     private String fileName;
 
     @SerializedName("doc_id")
     @Expose
-    private long docId;
+    private long doc_id;
 
-    @SerializedName("file_path")
+    @SerializedName("filePath")
     @Expose
     private String filePath;
 
-    public FileModel(long id, String fileName, long docId, String filePath) {
+    public FileModel(long id, String fileName, long doc_id, String filePath) {
         this.id = id;
         this.fileName = fileName;
-        this.docId = docId;
+        this.doc_id = doc_id;
         this.filePath = filePath;
     }
 
@@ -48,12 +48,12 @@ public class FileModel {
         this.fileName = fileName;
     }
 
-    public long getDocId() {
-        return docId;
+    public long getDoc_id() {
+        return doc_id;
     }
 
-    public void setDocId(long docId) {
-        this.docId = docId;
+    public void setDoc_id(long doc_id) {
+        this.doc_id = doc_id;
     }
 
     public String getFilePath() {

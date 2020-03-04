@@ -10,14 +10,15 @@ import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ServerConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.DocModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class GetDocs extends AsyncTask<Void, Void, Collection<DocModel>> {
-    private String authorization;
+    private String sessionId;
 
-    public GetDocs(String authorization) {
-        this.authorization = authorization;
+    public GetDocs() {
+        this.sessionId = Principal.getSessionId();
     }
 
     @Override
@@ -25,8 +26,7 @@ public class GetDocs extends AsyncTask<Void, Void, Collection<DocModel>> {
 
         ApiService apiService = ApiConnection.getApiService();
 
-        String authHeader = "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP);
-        Call<Collection<DocModel>> call = apiService.getDocs(authHeader);
+        Call<Collection<DocModel>> call = apiService.getDocs(sessionId);
         try {
             Response<Collection<DocModel>> response = call.execute();
             if (response.isSuccessful())

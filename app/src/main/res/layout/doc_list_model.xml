@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textColor="@color/defaultTextColor"
+    android:gravity="center"
     android:orientation="horizontal"
     >
 
@@ -13,6 +14,9 @@
             android:id="@+id/document"
             android:layout_width="match_parent"
             android:layout_weight="0.5"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingRight="5dp"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textColor="@color/defaultTextColor"
@@ -23,6 +27,9 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_weight="0.5"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="5dp"
             android:layout_height="wrap_content"
             android:textColor="@color/defaultTextColor"
             android:textSize="15sp">

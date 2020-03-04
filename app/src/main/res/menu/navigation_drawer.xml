@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/secrets"
+            android:icon="@drawable/ic_secrets_48dp"
+            android:title="Secrets"/>
+
+        <item android:id="@+id/docs"
+            android:icon="@drawable/ic_document_48dp"
+            android:title="Docs"/>
+
+        <item android:id="@+id/notes"
+            android:icon="@drawable/ic_notes_48dp"
+            android:title="Notes"/>
+
+    </group>
+
+    <item tools:ignore="MenuTitle">
+        <menu>
+            <item
+                android:id="@+id/sign_out"
+                android:icon="@drawable/ic_exit_48dp"
+                android:title="Sign Out"
+                />
+        </menu>
+
+    </item>
+
+
+
+</menu>

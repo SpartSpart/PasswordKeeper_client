@@ -6,8 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textColor="@color/defaultTextColor"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
     >
+
+        <CheckBox
+            android:id="@+id/fileCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+           >
+        </CheckBox>
 
         <TextView
             android:id="@+id/fileInfo"
@@ -16,15 +26,19 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textColor="@color/defaultTextColor"
+            android:focusable="true"
+            android:clickable="true"
             android:textSize="15sp">
         </TextView>
 
-        <ImageView
-            android:id="@+id/passwordVisibleImg"
+        <ImageButton
+            android:id="@+id/editFileName"
+            android:background="@drawable/btn_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            app:srcCompat="@drawable/ic_file_36dp"></ImageView>
+            app:srcCompat="@drawable/ic_edit_36dp"
+            >
+        </ImageButton>
 
 </LinearLayout>
 

@@ -14,13 +14,6 @@
         android:title="@string/action_save"
         android:icon="@drawable/ic_refresh_48dp"
         app:showAsAction="always"/>
-    <item
-        android:id="@+id/action_secret"
-        android:orderInCategory="100"
-        android:title="@string/action_save"
-        android:icon="@drawable/ic_secrets_48dp"
-        app:showAsAction="always"/>
-
 
 </menu>
 

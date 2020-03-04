@@ -8,16 +8,17 @@ import java.io.IOException;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal;
 import retrofit2.Call;
 import retrofit2.Response;
 
 
 public class AddSecret extends AsyncTask<Void, Void, Long> {
-    private String authorization;
+    private String sessionId;
     private SecretModel secretModel;
 
-    public AddSecret(String authorization, SecretModel secretModel) {
-        this.authorization = authorization;
+    public AddSecret(SecretModel secretModel) {
+        this.sessionId = Principal.getSessionId();
         this.secretModel = secretModel;
     }
 
@@ -27,8 +28,8 @@ public class AddSecret extends AsyncTask<Void, Void, Long> {
 
         ApiService apiService = ApiConnection.getApiService();
 
-        String authHeader = "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP);
-        Call<Long> call = apiService.addSecret(authHeader, secretModel);
+        //String authHeader = "Basic " + Base64.encodeToString(sessionId.getBytes(), Base64.NO_WRAP);
+        Call<Long> call = apiService.addSecret(sessionId, secretModel);
         try {
             Response<Long> response = call.execute();
             if (response.isSuccessful())

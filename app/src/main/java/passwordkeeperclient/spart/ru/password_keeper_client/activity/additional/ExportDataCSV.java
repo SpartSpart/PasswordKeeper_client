@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.security.Principal;
 import java.util.ArrayList;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.SecretActivity;
@@ -19,35 +20,6 @@ import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretMode
 public class ExportDataCSV {
 
     private static final char DEFAULT_SEPARATOR = ';';
-
-//    public void exportDataToFile(ArrayList<SecretModel> secretModels) throws IOException {
-//        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        String fileName = "PasswordKeeperData.csv";
-//        String filePath = baseDir + File.separator + fileName;
-//        File exportFile = new File(filePath);
-//        CSVWriter writer;
-//
-////        if(exportFile.exists()&&!exportFile.isDirectory())
-////        {
-////            FileWriter fileWriter = new FileWriter(filePath, true);
-////            writer = new CSVWriter(fileWriter);
-////        }
-////        else
-//        {
-//            writer = new CSVWriter(new FileWriter(filePath));
-//
-//        }
-//
-//        for (SecretModel secretModel:secretModels){
-//            String[] secret = {secretModel.getDescription(), secretModel.getLogin(),secretModel.getPassword()};
-//            writer.writeNext(secret);
-//        }
-//
-//        writer.close();
-//    }
-
-
-
 
     private void writeCSV(Writer csvWriter, ArrayList<SecretModel> secretModels) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -70,8 +42,8 @@ public class ExportDataCSV {
             appDir.mkdir();
         }
 
-        String[] login = SecretActivity.authorization.split(":");
-        String fileName = "PasswordKeeperData("+login[0]+").csv";
+        String login = passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal.getLogin();
+        String fileName = "Secrets("+login+").csv";
 
         File file = new File (appDir, fileName);
         if (file.exists ())

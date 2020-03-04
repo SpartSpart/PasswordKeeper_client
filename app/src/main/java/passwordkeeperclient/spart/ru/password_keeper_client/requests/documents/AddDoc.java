@@ -8,16 +8,17 @@ import java.io.IOException;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.DocModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal;
 import retrofit2.Call;
 import retrofit2.Response;
 
 
 public class AddDoc extends AsyncTask<Void, Void, Long> {
-    private String authorization;
     private DocModel docModel;
+    private String sessionId;
 
-    public AddDoc(String authorization, DocModel docModel) {
-        this.authorization = authorization;
+    public AddDoc(DocModel docModel) {
+        this.sessionId = Principal.getSessionId();
         this.docModel = docModel;
     }
 
@@ -27,8 +28,7 @@ public class AddDoc extends AsyncTask<Void, Void, Long> {
 
         ApiService apiService = ApiConnection.getApiService();
 
-        String authHeader = "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP);
-        Call<Long> call = apiService.addDoc(authHeader, docModel);
+        Call<Long> call = apiService.addDoc(sessionId, docModel);
         try {
             Response<Long> response = call.execute();
             if (response.isSuccessful())

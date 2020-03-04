@@ -1,7 +1,14 @@
 package passwordkeeperclient.spart.ru.password_keeper_client.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,7 +29,8 @@ import passwordkeeperclient.spart.ru.password_keeper_client.activity.additional.
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.additional.SearchDataWatcher;
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.SecretListAdapter;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
-import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
+import passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal;
+import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.CryptText;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.secret.DeleteSecret;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.secret.GetSecrets;
 
@@ -29,10 +38,13 @@ public class SecretActivity extends AppCompatActivity {
     private ListView secretListView;
     private ArrayList<SecretModel> secretListModels;
     private SecretListAdapter secretListAdapter;
-    public static String authorization;
     private boolean newSecret;
     private int selectedListPosition;
     private EditText searchData;
+
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +53,9 @@ public class SecretActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_secret);
 
-        Toolbar toolbar = findViewById(R.id.secretToolbar);
-        setSupportActionBar(toolbar);
+        setNavigationMenuProperties();
 
         searchData = findViewById(R.id.searchData);
-
-        authorization = getIntent().getStringExtra("Authorization");
 
         selectedListPosition = 0;
 
@@ -56,18 +65,76 @@ public class SecretActivity extends AppCompatActivity {
 
         SearchDataWatcher searchDataWatcher =new SearchDataWatcher(secretListAdapter);
         searchData.addTextChangedListener(searchDataWatcher);
+
+    }
+
+    private void setNavigationMenuProperties(){
+        Toolbar toolbar = findViewById(R.id.secretToolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(
+                this,drawer, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(toogle);
+        toogle.syncState();
+
+        navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUserName = (TextView)headerView.findViewById(R.id.userName);
+        navUserName.setText(Principal.getLogin());
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                 switch (item.getItemId()){
+                     case R.id.secrets: {
+
+                          break;
+                     }
+                     case R.id.docs: {
+                         showDocActivity();
+                         break;
+                 }
+            }
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+            }
+        });
+    }
+
+    private void setUserNameToHeader(){
+        //LinearLayout header = findViewById(R.id.nav_header);
+        TextView userName = findViewById(R.id.userName);
+        userName.setText("dsfsd");
+
+    }
+
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+            super.onBackPressed();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshSecretListAdapter();
+        navigationView.setCheckedItem(R.id.secrets);
     }
 
     public void fillSecretList() {
         ArrayList<SecretModel> secretModels = null;
 
-        secretModels = new ArrayList<>(getSecrets(authorization));
+        secretModels = new ArrayList<>(getSecrets());
 
         Long id;
         String description;
@@ -78,9 +145,9 @@ public class SecretActivity extends AppCompatActivity {
             for (SecretModel secret : secretModels) {
 
                 id = secret.getId();
-                description = Crypto.decryptString(secret.getDescription());
-                login = Crypto.decryptString(secret.getLogin());
-                password = Crypto.decryptString(secret.getPassword());
+                description = CryptText.decryptString(secret.getDescription());
+                login = CryptText.decryptString(secret.getLogin());
+                password = CryptText.decryptString(secret.getPassword());
 
                 SecretModel model = new SecretModel(id, description, login, password);
                 secretListModels.add(model);
@@ -100,9 +167,7 @@ public class SecretActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_export_csv: {
-                ExportDataCSV exportDataCSV = new ExportDataCSV();
-                String result = exportDataCSV.exportData(secretListModels);
-                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+                exportDialog();
                 return true;
             }
             case R.id.action_refresh: {
@@ -118,17 +183,13 @@ public class SecretActivity extends AppCompatActivity {
                 newSecret = true;
                 return true;
                }
-            case R.id.action_secret: {
-                showDocActivity();
-                return true;
-            }
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    public Collection<SecretModel> getSecrets(String authorization) {
-        GetSecrets getSecrets = new GetSecrets(authorization);
+    public Collection<SecretModel> getSecrets() {
+        GetSecrets getSecrets = new GetSecrets();
         try {
             return getSecrets.execute().get();
         } catch (Exception e) {
@@ -145,7 +206,6 @@ public class SecretActivity extends AppCompatActivity {
 
     private void showDocActivity(){
         Intent intent = new Intent(getBaseContext(), DocActivity.class);
-        intent.putExtra("Authorization", authorization);
         startActivity(intent);
     }
 
@@ -207,11 +267,42 @@ public class SecretActivity extends AppCompatActivity {
 
             public void onClick(DialogInterface dialog, int which) {
 
-                DeleteSecret deleteSecret = new DeleteSecret(authorization, secretId);
+                DeleteSecret deleteSecret = new DeleteSecret(secretId);
                 deleteSecret.execute();
 
                 secretListModels.remove(listViewPosition);
                 refreshSecretListAdapter();
+
+                dialog.dismiss();
+            }
+        });
+
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void exportDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Warning!");
+        builder.setMessage("Do you want export all secrets?");
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+
+                ExportDataCSV exportDataCSV = new ExportDataCSV();
+                String result = exportDataCSV.exportData(secretListModels);
+                Toast.makeText(SecretActivity.this, result, Toast.LENGTH_SHORT).show();
 
                 dialog.dismiss();
             }

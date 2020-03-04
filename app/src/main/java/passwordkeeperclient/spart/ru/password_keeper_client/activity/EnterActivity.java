@@ -1,20 +1,26 @@
 package passwordkeeperclient.spart.ru.password_keeper_client.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
-import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
+import passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal;
+import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.CryptFile;
+import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.CryptText;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.user.LogIn;
 
 public class EnterActivity extends AppCompatActivity {
@@ -24,7 +30,6 @@ public class EnterActivity extends AppCompatActivity {
     private CheckBox rememberCheckBox;
     private final String SERVER_CONNECTION_FAILED = "Server connection failed";
     private final String WRONG_LOGIN_OR_PASSWORD = "Login/Password Incorrect";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,30 +44,6 @@ public class EnterActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_enter, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        switch (id) {
-//            case R.id.connection_settings: {
-//                Intent intent = new Intent(getBaseContext(), ConnectionSettingsActivity.class);
-//                //intent.putExtra("Authorization", authorization;
-//                startActivity(intent);
-//                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-//                return true;
-//            }
-//
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
 
     @Override
     protected void onResume() {
@@ -88,12 +69,15 @@ public class EnterActivity extends AppCompatActivity {
                      else {
                         Toast.makeText(getApplicationContext(), "Login Correct", Toast.LENGTH_LONG).show();
 
-                        Crypto.setKeys(loginEditTxt.getText().toString());
+                        CryptText.setKeys(loginEditTxt.getText().toString());
+                        CryptFile.setKey(loginEditTxt.getText().toString());
 
                         rememberLoginPasswordToMemory(rememberCheckBox.isChecked());
 
+                            Principal.setLogin(loginEditTxt.getText().toString());
+                            Principal.setSessionId("JSESSIONID="+sessionId);
+
                         Intent intent = new Intent(getBaseContext(), SecretActivity.class);
-                        intent.putExtra("Authorization", authorization);
                         startActivity(intent);
                     }
             } catch (InterruptedException e) {

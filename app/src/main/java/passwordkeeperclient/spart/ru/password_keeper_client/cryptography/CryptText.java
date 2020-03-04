@@ -6,7 +6,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class Crypto {
+public class CryptText {
 
     private static String key = "aesEncryptionKey";
     private static String initVector = "encryptionIntVec";
@@ -14,10 +14,10 @@ public class Crypto {
 
     public static void setKeys(String secretKeyLikeLogin) {
         String specialKey = "aesEncryptionKey";
-        String spaecialInitVector = "encryptionIntVec";
+        String specialInitVector = "encryptionIntVec";
 
         key = secretKeyLikeLogin + specialKey;
-        initVector = secretKeyLikeLogin + spaecialInitVector;
+        initVector = secretKeyLikeLogin + specialInitVector;
 
         key = key.substring(0, 16);
         initVector = initVector.substring(0, 16);

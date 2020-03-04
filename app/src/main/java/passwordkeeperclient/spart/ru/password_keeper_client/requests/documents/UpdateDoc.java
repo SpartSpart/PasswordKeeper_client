@@ -8,20 +8,20 @@ import java.io.IOException;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiConnection;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.ApiService;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.DocModel;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal;
 import retrofit2.Call;
 import retrofit2.Response;
 
 
 public class UpdateDoc extends AsyncTask<Void, Void, Boolean> {
 
-    private String authorization;
+    private String sessionId;
     private Long id;
     private DocModel docModel;
 
 
-    public UpdateDoc(String authorization, Long id, DocModel docModel) {
-        this.authorization = authorization;
+    public UpdateDoc(Long id, DocModel docModel) {
+        this.sessionId = Principal.getSessionId();
         this.id = id;
         this.docModel = docModel;
     }
@@ -31,8 +31,7 @@ public class UpdateDoc extends AsyncTask<Void, Void, Boolean> {
 
         ApiService apiService = ApiConnection.getApiService();
 
-        String authHeader = "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP);
-        Call<Void> call = apiService.updateDoc(authHeader,id, docModel);
+        Call<Void> call = apiService.updateDoc(sessionId,id, docModel);
         try {
             Response<Void> response = call.execute();
             if (response.isSuccessful())

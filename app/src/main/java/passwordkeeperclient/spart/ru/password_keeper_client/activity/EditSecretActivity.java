@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
-import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.Crypto;
+import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.CryptText;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.secret.AddSecret;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.secret.UpdateSecret;
 
@@ -23,8 +23,6 @@ public class EditSecretActivity extends AppCompatActivity {
     private EditText secretPassword;
 
     private SecretModel secretModel;
-
-    private String authorization;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +35,6 @@ public class EditSecretActivity extends AppCompatActivity {
         secretDescription = findViewById(R.id.secretDescription);
         secretLogin = findViewById(R.id.secretLogin);
         secretPassword = findViewById(R.id.secretPassword);
-
-        authorization = SecretActivity.authorization;
 
         secretModel = (SecretModel) getIntent().getSerializableExtra("SecretModel");
         if (secretModel != null) {
@@ -126,11 +122,11 @@ public class EditSecretActivity extends AppCompatActivity {
         try {
             SecretModel encryptedSecret = encryptSecret(secretModel);
             if (id == 0) {
-                AddSecret addSecret = new AddSecret(authorization, encryptedSecret);
+                AddSecret addSecret = new AddSecret(encryptedSecret);
                 id = addSecret.execute().get();
                 secretModel.setId(id); //если новая запись, то нужно чтобы в листе отобразилась запись с id, иначе при редактировании -  создастся новая
             } else {
-                UpdateSecret updateSecret = new UpdateSecret(authorization, secretModel.getId(), encryptedSecret);
+                UpdateSecret updateSecret = new UpdateSecret(secretModel.getId(), encryptedSecret);
                 updateSecret.execute();
             }
 
@@ -144,9 +140,9 @@ public class EditSecretActivity extends AppCompatActivity {
         SecretModel cryptedSecret = secretModel;
 
         cryptedSecret.setId(secretModel.getId());
-        cryptedSecret.setDescription(Crypto.encryptString(secretModel.getDescription()));
-        cryptedSecret.setLogin(Crypto.encryptString(secretModel.getLogin()));
-        cryptedSecret.setPassword(Crypto.encryptString(secretModel.getPassword()));
+        cryptedSecret.setDescription(CryptText.encryptString(secretModel.getDescription()));
+        cryptedSecret.setLogin(CryptText.encryptString(secretModel.getLogin()));
+        cryptedSecret.setPassword(CryptText.encryptString(secretModel.getPassword()));
 
         return cryptedSecret;
     }
