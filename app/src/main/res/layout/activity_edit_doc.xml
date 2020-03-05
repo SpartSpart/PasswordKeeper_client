@@ -79,10 +79,9 @@
                     >
 
                     <ImageButton
-                        android:id="@+id/downloadFiles"
+                        android:id="@+id/downloadFile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:background="@drawable/btn_selector"
                         app:srcCompat="@drawable/ic_download_36dp"
                         />
@@ -91,8 +90,8 @@
                      android:id="@+id/empty"
                      android:layout_height="wrap_content"
                      android:layout_width="wrap_content"
-                     android:layout_toEndOf="@id/downloadFiles"
-                     android:layout_toRightOf="@id/downloadFiles"
+                     android:layout_toEndOf="@id/downloadFile"
+                     android:layout_toRightOf="@id/downloadFile"
                      android:text="   "
                      />
 
@@ -106,6 +105,24 @@
                         app:srcCompat="@drawable/ic_delete_36dp"
                         android:layout_toEndOf="@id/empty"
                         android:layout_toRightOf="@id/empty" />
+
+                    <TextView
+                        android:id="@+id/empty2"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_toEndOf="@id/deleteFiles"
+                        android:layout_toRightOf="@id/deleteFiles"
+                        android:text="   "
+                        />
+
+                    <ImageButton
+                        android:id="@+id/shareFiles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_selector"
+                        app:srcCompat="@drawable/ic_share_36dp"
+                        android:layout_toEndOf="@id/empty2"
+                        android:layout_toRightOf="@id/empty2" />
 
                     <ImageButton
                         android:id="@+id/uploadFile"

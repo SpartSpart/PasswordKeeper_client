@@ -125,10 +125,12 @@ public class FileListAdapter extends BaseAdapter implements CompoundButton.OnChe
 
                 EditDocActivity.deleteFilesBtn.setVisibility(View.VISIBLE);
                 EditDocActivity.downloadFilesBtn.setVisibility(View.VISIBLE);
+                EditDocActivity.shareFileBtn.setVisibility(View.VISIBLE);
                 return;
             }
         EditDocActivity.deleteFilesBtn.setVisibility(View.INVISIBLE);
         EditDocActivity.downloadFilesBtn.setVisibility(View.INVISIBLE);
+        EditDocActivity.shareFileBtn.setVisibility(View.INVISIBLE);
         EditDocActivity.checkAllFilesChkBox.setChecked(false);
 
     }

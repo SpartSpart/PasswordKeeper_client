@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -15,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -44,7 +44,7 @@ import passwordkeeperclient.spart.ru.password_keeper_client.api.model.FileModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.CryptFile;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.documents.AddDoc;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.files.DeleteFiles;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.files.DownloadFiles;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.files.DownloadFile;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.files.GetFilesInfo;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.documents.UpdateDoc;
 import passwordkeeperclient.spart.ru.password_keeper_client.requests.files.UpdateFileName;
@@ -64,6 +64,7 @@ public class EditDocActivity extends AppCompatActivity implements EditFileNameDi
 
     public static ImageButton deleteFilesBtn;
     public static ImageButton downloadFilesBtn;
+    public static ImageButton shareFileBtn;
 
     private ImageButton uploadFile;
 
@@ -85,7 +86,8 @@ public class EditDocActivity extends AppCompatActivity implements EditFileNameDi
         checkAllFilesChkBox = findViewById(R.id.checkAllCheckBox);
 
         deleteFilesBtn = findViewById(R.id.deleteFiles);
-        downloadFilesBtn = findViewById(R.id.downloadFiles);
+        downloadFilesBtn = findViewById(R.id.downloadFile);
+        shareFileBtn = findViewById(R.id.shareFiles);
         uploadFile = findViewById(R.id.uploadFile);
 
         fileListModels = new ArrayList<>();
@@ -162,6 +164,7 @@ public class EditDocActivity extends AppCompatActivity implements EditFileNameDi
     private void setButtons() {
         deleteFilesBtn.setVisibility(View.INVISIBLE);
         downloadFilesBtn.setVisibility(View.INVISIBLE);
+        shareFileBtn.setVisibility(View.INVISIBLE);
 
         checkAllFilesChkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -189,24 +192,26 @@ public class EditDocActivity extends AppCompatActivity implements EditFileNameDi
         downloadFilesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<FileModel> downloadFileList = new ArrayList<>();
-                SparseBooleanArray selectedItems = fileListAdapter.selectedItems;
-                for(int i=0;i<fileListModels.size();i++) {
-                    if (selectedItems.get(i) == true)
-                        downloadFileList.add(fileListModels.get(i));
+                downloadFiles(false);
+            }
+        });
+
+        shareFileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Uri> fileUri = new ArrayList<Uri>();
+                ArrayList<File> downloadedFiles = downloadFiles(true);
+
+                for (File file : downloadedFiles){
+                    Uri uri = Uri.fromFile(file);
+                    fileUri.add(uri);
                 }
-                for (FileModel model : downloadFileList){
-                    DownloadFiles downloadFiles = new DownloadFiles(model.getId(),docModel.getDocument(), model.getFileName());
-                    try {
-                        downloadFiles.execute().get();
-                    } catch (InterruptedException e) {
-                        Toast.makeText(EditDocActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                    } catch (ExecutionException e) {
-                        Toast.makeText(EditDocActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                Toast.makeText(EditDocActivity.this, "Files saved successfully", Toast.LENGTH_SHORT).show();
-                selectAllItems(false);
+
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, fileUri);
+                shareIntent.setType("*/*");
+                startActivity(Intent.createChooser(shareIntent, "Share files to..."));
             }
         });
 
@@ -221,6 +226,30 @@ public class EditDocActivity extends AppCompatActivity implements EditFileNameDi
                 startActivityForResult(Intent.createChooser(intent, "Select a file"), READ_REQUEST_CODE);
             }
         });
+    }
+
+    private ArrayList<File> downloadFiles(boolean share){
+        List<FileModel> downloadFileList = new ArrayList<>();
+        ArrayList<File> downloadedFiles = new ArrayList<>();
+        SparseBooleanArray selectedItems = fileListAdapter.selectedItems;
+        for(int i=0;i<fileListModels.size();i++) {
+            if (selectedItems.get(i) == true)
+                downloadFileList.add(fileListModels.get(i));
+        }
+        for (FileModel model : downloadFileList){
+            DownloadFile downloadFile = new DownloadFile(model.getId(),docModel.getDocument(), model.getFileName());
+            try {
+                downloadedFiles.add(downloadFile.execute().get());
+            } catch (InterruptedException e) {
+                Toast.makeText(EditDocActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+            } catch (ExecutionException e) {
+                Toast.makeText(EditDocActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (!share)
+            Toast.makeText(EditDocActivity.this, "Files saved successfully", Toast.LENGTH_SHORT).show();
+        selectAllItems(false);
+        return downloadedFiles;
     }
 
     private void setEditTextItemsProperties(){
@@ -250,6 +279,7 @@ public class EditDocActivity extends AppCompatActivity implements EditFileNameDi
                 checkAllFilesChkBox.setChecked(false);
                 downloadFilesBtn.setVisibility(View.INVISIBLE);
                 deleteFilesBtn.setVisibility(View.INVISIBLE);
+                shareFileBtn.setVisibility(View.INVISIBLE);
         }
         fileListAdapter.notifyDataSetChanged();
     }

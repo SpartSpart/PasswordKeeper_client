@@ -4,6 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.DocListAdapter;
+import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.NoteListAdapter;
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.SecretListAdapter;
 
 /**
@@ -13,6 +14,7 @@ import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.Sec
 public class SearchDataWatcher implements TextWatcher {
     private SecretListAdapter secretListAdapter;
     private DocListAdapter docListAdapter;
+    private NoteListAdapter noteListAdapter;
 
     public SearchDataWatcher(SecretListAdapter secretListAdapter) {
         this.secretListAdapter = secretListAdapter;
@@ -20,6 +22,10 @@ public class SearchDataWatcher implements TextWatcher {
 
     public SearchDataWatcher(DocListAdapter docListAdapter) {
         this.docListAdapter = docListAdapter;
+    }
+
+    public SearchDataWatcher(NoteListAdapter noteListAdapter) {
+        this.noteListAdapter = noteListAdapter;
     }
 
     @Override
@@ -32,7 +38,10 @@ public class SearchDataWatcher implements TextWatcher {
         if (secretListAdapter!=null)
             secretListAdapter.getFilter().filter(s);
         else
+            if (docListAdapter!=null)
             docListAdapter.getFilter().filter(s);
+        else
+            noteListAdapter.getFilter().filter(s);
     }
 
     @Override

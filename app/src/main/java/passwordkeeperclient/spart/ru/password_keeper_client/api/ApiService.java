@@ -8,6 +8,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.DocModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.FileModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.model.NoteModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.SecretModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.api.model.UserModel;
 import retrofit2.Call;
@@ -28,7 +29,6 @@ public interface ApiService {
     @POST("user/add/")
     Call<Void> addUser(@Body UserModel userModel);
 
-    //@FormUrlEncoded
     @GET("secrets/")
     Call<Collection<SecretModel>> getSecrests(@Header("Cookie") String authHeader);
 
@@ -77,5 +77,14 @@ public interface ApiService {
 
     @POST("files/update/{file_id}")
     Call<Boolean> updateFileName(@Header("Cookie") String authHeader, @Path("file_id") long file_id, @Body String newFileName);
+
+    @POST("notes/")
+    Call<Long> addNote(@Header("Cookie") String authHeader, @Body NoteModel noteModel);
+
+    @PUT("notes/{id}")
+    Call<Void> updateNote(@Header("Cookie") String authHeader, @Path("id") long id, @Body NoteModel noteModel);
+
+    @GET("notes/")
+    Call<Collection<NoteModel>> getNotes(@Header("Cookie") String authHeader);
 }
 

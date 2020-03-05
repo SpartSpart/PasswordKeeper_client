@@ -1,11 +1,11 @@
 package passwordkeeperclient.spart.ru.password_keeper_client.activity;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -89,13 +89,20 @@ public class SecretActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                  switch (item.getItemId()){
                      case R.id.secrets: {
-
                           break;
                      }
                      case R.id.docs: {
                          showDocActivity();
                          break;
-                 }
+                     }
+                     case R.id.notes:{
+                         showNoteActivity();
+                         break;
+                     }
+                     case R.id.sign_out:{
+                         resetLoginPassword();
+
+                     }
             }
             drawer.closeDrawer(GravityCompat.START);
             return true;
@@ -103,16 +110,21 @@ public class SecretActivity extends AppCompatActivity {
         });
     }
 
-    private void setUserNameToHeader(){
-        //LinearLayout header = findViewById(R.id.nav_header);
-        TextView userName = findViewById(R.id.userName);
-        userName.setText("dsfsd");
+    private void resetLoginPassword(){
+        Principal.setSessionId(null);
+        Principal.setLogin(null);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("Login", "");
+            editor.putString("Password", "");
+            editor.putBoolean("RememberIsChecked",true);
 
+        editor.commit();
+
+        this.finish();
+        Intent intent = new Intent(getBaseContext(), EnterActivity.class);
+        startActivity(intent);
     }
-
-
-
-
 
 
     @Override
@@ -206,6 +218,11 @@ public class SecretActivity extends AppCompatActivity {
 
     private void showDocActivity(){
         Intent intent = new Intent(getBaseContext(), DocActivity.class);
+        startActivity(intent);
+    }
+
+    private void showNoteActivity(){
+        Intent intent = new Intent(getBaseContext(), NoteActivity.class);
         startActivity(intent);
     }
 

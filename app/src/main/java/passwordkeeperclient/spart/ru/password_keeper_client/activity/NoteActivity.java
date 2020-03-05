@@ -3,6 +3,7 @@ package passwordkeeperclient.spart.ru.password_keeper_client.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,48 +26,49 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import passwordkeeperclient.spart.ru.password_keeper_client.R;
-import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.DocListAdapter;
+import passwordkeeperclient.spart.ru.password_keeper_client.activity.adapter.NoteListAdapter;
 import passwordkeeperclient.spart.ru.password_keeper_client.activity.additional.SearchDataWatcher;
-import passwordkeeperclient.spart.ru.password_keeper_client.api.model.DocModel;
+import passwordkeeperclient.spart.ru.password_keeper_client.api.model.NoteModel;
 import passwordkeeperclient.spart.ru.password_keeper_client.credentianals.Principal;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.documents.DeleteDoc;
-import passwordkeeperclient.spart.ru.password_keeper_client.requests.documents.GetDocs;
+import passwordkeeperclient.spart.ru.password_keeper_client.cryptography.CryptText;
+import passwordkeeperclient.spart.ru.password_keeper_client.requests.notes.GetNotes;
 
-public class DocActivity extends AppCompatActivity {
-
-    private ListView docListView;
-    private static ArrayList<DocModel> docListModels;
-    private DocListAdapter docListAdapter;
-    private boolean newDoc;
+public class NoteActivity extends AppCompatActivity {
+    private ListView noteListView;
+    private ArrayList<NoteModel> noteListModels;
+    private NoteListAdapter noteListAdapter;
+    private boolean newNote;
     private int selectedListPosition;
     private EditText searchData;
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        docListModels = new ArrayList<>();
+        noteListModels = new ArrayList<>();
 
-        setContentView(R.layout.activity_doc);
+        setContentView(R.layout.activity_note);
+
+        setNavigationMenuProperties();
 
         searchData = findViewById(R.id.searchData);
 
         selectedListPosition = 0;
 
-        fillDocList();
+        fillNoteList();
 
-        docListViewCreate();
+        noteListViewCreate();
 
-        SearchDataWatcher searchDataWatcher =new SearchDataWatcher(docListAdapter);
+        SearchDataWatcher searchDataWatcher =new SearchDataWatcher(noteListAdapter);
         searchData.addTextChangedListener(searchDataWatcher);
 
-        setNavigationMenuProperties();
     }
 
     private void setNavigationMenuProperties(){
-        Toolbar toolbar = findViewById(R.id.docToolbar);
+        Toolbar toolbar = findViewById(R.id.noteToolbar);
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
@@ -86,23 +87,23 @@ public class DocActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.secrets: {
-                            showSecretActivity();
-                        break;
-                    }
-                    case R.id.docs: {
-                        break;
-                    }
-                    case R.id.notes:{
-                        showNoteActivity();
-                        break;
-                    }
-                    case R.id.sign_out:{
-                        resetLoginPassword();
+                 switch (item.getItemId()){
+                     case R.id.secrets: {
+                          showSecretActivity();
+                          break;
+                     }
+                     case R.id.docs: {
+                         showDocActivity();
+                         break;
+                     }
+                     case R.id.notes: {
+                         break;
+                     }
+                     case R.id.sign_out:{
+                         resetLoginPassword();
 
-                    }
-                }
+                     }
+                 }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -126,59 +127,45 @@ public class DocActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
         if(drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START);
+           drawer.closeDrawer(GravityCompat.START);
         }
         else
             super.onBackPressed();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        refreshDocListAdapter();
-        navigationView.setCheckedItem(R.id.docs);
+        refreshNoteListAdapter();
+        navigationView.setCheckedItem(R.id.notes);
     }
 
-    private void showSecretActivity() {
-        Intent intent = new Intent(getBaseContext(), SecretActivity.class);
-        startActivity(intent);
-    }
+    public void fillNoteList() {
+        ArrayList<NoteModel> noteModels = null;
 
-    private void showNoteActivity(){
-        Intent intent = new Intent(getBaseContext(), NoteActivity.class);
-        startActivity(intent);
-    }
-
-    public void fillDocList() {
-        ArrayList<DocModel> docModels = null;
-
-        docModels = new ArrayList<>(getDocs());
+        noteModels = new ArrayList<>(getNotes());
 
         Long id;
-        String document;
-        String description;
+        String note;
 
-        if (!docModels.isEmpty()) {
-            for (DocModel docModel : docModels) {
+        if (!noteModels.isEmpty()) {
+            for (NoteModel noteModel : noteModels) {
 
-                id = docModel.getId();
-                document = docModel.getDocument();
-                description = docModel.getDescription();
+                id = noteModel.getId();
+                note = CryptText.decryptString(noteModel.getNote());
 
-                DocModel model = new DocModel(id, document, description);
-                docListModels.add(model);
+                NoteModel model = new NoteModel(id, note);
+                noteListModels.add(model);
             }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_doc, menu);
+        getMenuInflater().inflate(R.menu.menu_note, menu);
         return true;
     }
 
@@ -187,51 +174,59 @@ public class DocActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_refresh: {
-                docListModels.clear();
-                fillDocList();
-                docListAdapter.getFilter().filter(null);
-                docListAdapter.notifyDataSetChanged();
+           case R.id.action_refresh: {
+                noteListModels.clear();
+                fillNoteList();
+                noteListAdapter.getFilter().filter(null);
+                noteListAdapter.notifyDataSetChanged();
                 searchData.setText("");
                 return true;
             }
             case R.id.action_new: {
-                editDoc(null);
-                newDoc = true;
+                editNote(null);
+                newNote = true;
                 return true;
-            }
-
+               }
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    public Collection<DocModel> getDocs() {
-        GetDocs getDocs = new GetDocs();
+    public Collection<NoteModel> getNotes() {
+        GetNotes getNotes = new GetNotes();
         try {
-            return getDocs.execute().get();
+            return getNotes.execute().get();
         } catch (Exception e) {
-            Toast.makeText(this, "getFilesInfo:" + e.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "getNoteInfo:" + e.toString(), Toast.LENGTH_LONG).show();
         }
         return null;
     }
 
-    public void editDoc(DocModel docModel) {
-        Intent intent = new Intent(getBaseContext(), EditDocActivity.class);
-        intent.putExtra("DocModel", docModel);
+    public void editNote(NoteModel noteModel) {
+        Intent intent = new Intent(getBaseContext(), EditNoteActivity.class);
+        intent.putExtra("NoteModel", noteModel);
         startActivityForResult(intent,1);
+    }
+
+    private void showDocActivity(){
+        Intent intent = new Intent(getBaseContext(), DocActivity.class);
+        startActivity(intent);
+    }
+
+    private void showSecretActivity(){
+        Intent intent = new Intent(getBaseContext(), SecretActivity.class);
+        startActivity(intent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
-        DocModel docModel = (DocModel) data.getSerializableExtra("DocModelReturn");
+        NoteModel noteModel = (NoteModel) data.getSerializableExtra("NoteModelReturn");
         try {
-            if (newDoc)  //проверка на новую запись или обновляемую
-                docListModels.add(docModel);
+            if (newNote)  //проверка на новую запись или обновляемую
+                noteListModels.add(noteModel);
             else {
-                docListModels.get(selectedListPosition).setDocument(docModel.getDocument());
-                docListModels.get(selectedListPosition).setDescription(docModel.getDescription());
+                  noteListModels.get(selectedListPosition).setNote(noteModel.getNote());
             }
         }
         catch (Exception e) {
@@ -240,50 +235,50 @@ public class DocActivity extends AppCompatActivity {
         selectedListPosition = 0;
     }
 
-    private void docListViewCreate() {
+    private void noteListViewCreate() {
 
-        docListAdapter = new DocListAdapter(this, docListModels);
+        noteListAdapter = new NoteListAdapter(this, noteListModels);
 
-        docListView = findViewById(R.id.docListView);
-        docListView.setTextFilterEnabled(true);
-        docListView.setFocusable(true);
+        noteListView = findViewById(R.id.noteListView);
+        noteListView.setTextFilterEnabled(true);
+        noteListView.setFocusable(true);
 
-        docListView.setAdapter(docListAdapter);
-        docListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        noteListView.setAdapter(noteListAdapter);
+        noteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long l) {
-                editDoc((DocModel) parent.getItemAtPosition(pos));
+                editNote((NoteModel) parent.getItemAtPosition(pos));
                 selectedListPosition = pos;
-                newDoc = false;
+                newNote = false;
             }
         });
-        docListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> docs, View arg1,
+            public boolean onItemLongClick(AdapterView<?> notes, View arg1,
                                            int pos, long id) {
-                DocModel docModel = (DocModel) docs.getItemAtPosition(pos);
-                deleteDialog(docModel.getId(),docModel.getDocument(), pos);
+                NoteModel noteModel = (NoteModel) notes.getItemAtPosition(pos);
+                deleteDialog(noteModel.getId(),noteModel.getNote(), pos);
                 return true;
             }
         });
 
     }
 
-    private void deleteDialog(final Long docId, final String doc, final int listViewPosition){
+    private void deleteDialog(final Long noteId, final String note, final int listViewPosition){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Warning!");
-        builder.setMessage("Delete "+doc+"?");
+        builder.setMessage("Delete "+note.substring(0,20)+"?");
 
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
 
-                DeleteDoc deleteDoc = new DeleteDoc(docId);
-                deleteDoc.execute();
-
-                docListModels.remove(listViewPosition);
-                refreshDocListAdapter();
+//                DeleteNote deleteSecret = new DeleteNote(noteId);
+//                deleteSecret.execute();
+//
+//                noteListModels.remove(listViewPosition);
+//                refreshNoteListAdapter();
 
                 dialog.dismiss();
             }
@@ -301,23 +296,22 @@ public class DocActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void refreshDocListAdapter(){
+
+    private void refreshNoteListAdapter(){
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                docListModels.clear();
-                fillDocList();
-                docListAdapter.notifyDataSetChanged();
+                noteListModels.clear();
+                fillNoteList();
+                noteListAdapter.notifyDataSetChanged();
                 refreshFilteredSecrets();
             }
         });
     }
 
     private void refreshFilteredSecrets(){
-        docListAdapter.getFilter().filter(searchData.getText());
-    }
+                noteListAdapter.getFilter().filter(searchData.getText());
+        }
 
-    public static ArrayList<DocModel> getDocListView(){
-        return docListModels;
-    }
 }
+

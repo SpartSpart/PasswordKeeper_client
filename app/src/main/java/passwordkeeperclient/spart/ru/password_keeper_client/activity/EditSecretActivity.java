@@ -48,7 +48,7 @@ public class EditSecretActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_edit_secret, menu);
+        getMenuInflater().inflate(R.menu.menu_edit_secret_or_note, menu);
         return true;
     }
 
